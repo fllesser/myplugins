@@ -4,4 +4,6 @@ for i in member_list:
     print(type(i))
 print(f"{', '.join((str(k) + '->' + v ) for k, v in member_list.items())}")
 
+for i in range(1, 19):
+    print(i)
 #12 34 56
