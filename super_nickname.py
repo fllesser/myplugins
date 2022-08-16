@@ -1,6 +1,5 @@
 from services.log import logger
 import time
-from nonebot.adapters.onebot.v11 import Bot
 from utils.utils import scheduler, get_bot
 
 
