@@ -83,26 +83,33 @@ async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
     if is_number(msg) and not (int(msg) < 0 or int(msg) > 30):
         kicked_num = int(msg)
     # 群员列表
-    gm_list = await GroupInfoUser.get_group_member_id_list(group_id=event.group_id)
+    # gm_list = await GroupInfoUser.get_group_member_id_list(group_id=event.group_id)
+    gm_list = await bot.get_group_member_list(group_id = event.group_id)
     # 待踢列表
-    member_list = []
+    # members = []
+    members = {}
     # 待踢成员计数
     kicked_count = 0
     now_time = int(time.time())
-    for member_qq in gm_list:
+    for member in gm_list:
         try:
-            member = await bot.get_group_member_info(user_id=member_qq, group_id=event.group_id, no_cache=True)
+            member = await bot.get_group_member_info(user_id=member["user_id"], group_id=event.group_id, no_cache=True)
         except:
-            await GroupInfoUser.delete_member_info(user_qq=member_qq, group_id=event.group_id)
+            # await GroupInfoUser.delete_member_info(user_qq=member["user_id"], group_id=event.group_id)
             continue
         if (now_time - int(member["last_sent_time"]) > 7777777) and int(member["level"]) < 30:
-            member_list.append(member["user_id"])
+            # member_list.append(member["user_id"])
+            members[member["user_id"]] = member["card"] if not member["card"] == "" else member["nickname"]
             kicked_count += 1
         if kicked_count == kicked_num:
             break
-    for qq in member_list:
+    message_str = ""
+    for qq, nick_name in members.items():
         await bot.set_group_kick(group_id=event.group_id, user_id=qq)
         await GroupInfoUser.delete_member_info(user_qq=qq, group_id=event.group_id)
         logger.info(f"group_id={event.group_id} user_id={qq} 已踢")
+        message_str += f"{qq} {nick_name}\n" 
         await asyncio.sleep(1)
-    await kugm.finish(message=f"{','.join(str(i) for i in member_list)} 通通被我送走了捏")
+    # await kugm.finish(message=f"{', '.join(str(i) for i in member_list)} 通通被我送走了捏")
+    # await kugm.finish(message=f"{', '.join((str(k) + ' ' + v ) for k, v in member_list.items())} \n通通被我送走了捏")
+    await kugm.finish(message=f"{message_str} 通通被我送走了捏")
