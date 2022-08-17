@@ -1,10 +1,7 @@
 
 
-members = []
-# 当前时间戳
+members = {"asddfs":123}
 
-for i in range(1, 20):
-    try:
-        print(f"第{i}次查询条数, 已匹配的待踢人数{len(members)}")
-    except:
-        print("异常")
+if members.get("asddfss") is None:
+    members["asddfss"] = 3
+print(members)

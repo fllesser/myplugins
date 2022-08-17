@@ -8,9 +8,11 @@ import time
 async def get_kicked_list(bot: Bot, group_id: int, kicked_num: int) -> List[Dict[str, Any]]:
     # 待踢群员列表
     members = []
-    # 当前时间戳
+    # 初始化
+    if GroupInfoUserByMe.query_start_dict.get(str(group_id)) is None:
+        GroupInfoUserByMe.query_start_dict[str(group_id)] = 1
     now_time = int(time.time())
-    for i in range(GroupInfoUserByMe.query_start_page, 20):
+    for i in range(GroupInfoUserByMe.query_start_dict[str(group_id)], 20):
         try:
             gm_list = await GroupInfoUserByMe.get_group_user_qq_list(
                 group_id=group_id,
@@ -32,4 +34,4 @@ async def get_kicked_list(bot: Bot, group_id: int, kicked_num: int) -> List[Dict
             if len(members) == kicked_num:
                 return members
         if len(members) == 0:
-            GroupInfoUserByMe.query_start_page += 1
+            GroupInfoUserByMe.query_start_dict[str(group_id)] += 1
