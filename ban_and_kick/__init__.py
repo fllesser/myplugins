@@ -1,17 +1,12 @@
-import time
 import asyncio
-# from models.group_member_info import GroupInfoUser
-from .model import GroupInfoUserByMe
-from nonebot.adapters.onebot.v11 import (
-    Bot,
-    GroupMessageEvent,
-    Message,
-)
+from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message
 from utils.utils import get_message_at, is_number
 from services.log import logger
 from nonebot import on_command
 from nonebot.params import CommandArg
 from nonebot.permission import SUPERUSER
+from .model import GroupInfoUserByMe
+from .data_source import get_kicked_list
 
 
 __zx_plugin_name__ = "禁言/踢人 [Admin]"
@@ -75,9 +70,6 @@ async def _(bot: Bot, event: GroupMessageEvent):
         except Exception as e:
             logger.error(f"set_group_kick failed {e}")
 
-
-
-
 @kugm.handle()
 async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
     if not (await bot.get_group_member_info(user_id=bot.self_id, group_id=event.group_id, no_cache=True))["role"] in ["admin", "owner"]:
@@ -86,43 +78,13 @@ async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
     kicked_num = 10
     if is_number(msg) and not (int(msg) < 0 or int(msg) > 30):
         kicked_num = int(msg)
-    # 群员列表
-    members = {}
-    # 待踢成员计数
-    kicked_count = 0
-    # 当前时间戳
-    now_time = int(time.time())
-    # 退出循环标识
-    loop_flag = False
-    for temp in range(1, 20):
-        try:
-            gm_list = await GroupInfoUserByMe.get_group_user_qq_list(
-                group_id=event.group_id,
-                user_num=100,
-                off_set=temp * 100
-            )
-        except:
-            break
-        for member_qq in gm_list:
-            try:
-                member = await bot.get_group_member_info(user_id=member_qq, group_id=event.group_id, no_cache=True)
-            except:
-                await GroupInfoUserByMe.delete_member_info(user_qq=member_qq, group_id=event.group_id)
-                continue
-            if (now_time - int(member["last_sent_time"]) > 7777777) and int(member["level"]) < 30:
-                # member_list.append(member["user_id"])
-                members[member["user_id"]] = member["card"] if not member["card"] == "" else member["nickname"]
-                kicked_count += 1
-            if kicked_count == kicked_num:
-                loop_flag = True
-                break
-        if loop_flag:
-            break   
     message_str = ""
-    for qq, nick_name in members.items():
-        await bot.set_group_kick(group_id=event.group_id, user_id=qq)
-        await GroupInfoUserByMe.delete_member_info(user_qq=qq, group_id=event.group_id)
-        logger.info(f"group_id={event.group_id} user_id={qq} 已踢")
-        message_str += f"{nick_name} {qq}\n" 
+    # for qq, nick_name in members.items():
+    for member in await get_kicked_list(bot=bot, group_id=event.group_id, kicked_num=kicked_num):
+        await bot.set_group_kick(group_id=event.group_id, user_id=member["user_id"])
+        await GroupInfoUserByMe.delete_member_info(user_qq=member["user_id"], group_id=event.group_id)
+        # logger.info(f"group_id={event.group_id} user_id={member['user_id']} 活跃等级:{member['level']} 已踢")
+        logger.info(f"{member}--->>>kicked")
+        message_str += f"{member['user_id']} {(member['card'] if not member['card'] == '' else member['nickname'])}\n"
         await asyncio.sleep(1)
-    await kugm.finish(message=f"{message_str} 通通被我送走了捏")
+    await kugm.finish(message=f"{message_str}通通被我送走了捏")

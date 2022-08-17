@@ -1,9 +1,10 @@
-member_list = { 12391284 : "haha" , 1231283 : "sdfasdf" }
-member_list[123123] = "dsfasdf"
-for i in member_list:
-    print(type(i))
-print(f"{', '.join((str(k) + '->' + v ) for k, v in member_list.items())}")
 
-for i in range(1, 19):
-    print(i)
-#12 34 56
+
+members = []
+# 当前时间戳
+
+for i in range(1, 20):
+    try:
+        print(f"第{i}次查询条数, 已匹配的待踢人数{len(members)}")
+    except:
+        print("异常")
