@@ -52,4 +52,3 @@ async def addtsj():
         logger.info(f"添加今日校园定时任务任务 SUCCESS {interval_hours}时{interval_minutes}分")
     except Exception as e:
         logger.error(f"添加今日校园任务错误 {e}")
-
