@@ -17,14 +17,14 @@ lz_list = ["绿头鸡", "鸡脖哥", "鸡脖王", "鸡脖哥哥"]
 async def _():
     try:
         bot = get_bot()
-        gl = await bot.get_group_list()
+        gl = await bot.call_api("get_group_list")
         gl = [g["group_id"] for g in gl]
         timestr = time.strftime("%a %b %d %H:%M %Y CST", time.localtime())
         for g in gl:
             await bot.set_group_card(group_id=g, user_id=bot.self_id, card=f"大头 {timestr}")
-        await bot.set_group_card(group_id=774331907, user_id=1626303708, card=f"{choice(lz_list)}") 
+        await bot.set_group_card(group_id=774331907, user_id=1626303708, card=choice(lz_list)) 
     except Exception as e:
-        logger.error(f"super_nickname error: {e}")
+        logger.error(f"error: {e}")
 
 @scheduler.scheduled_job(
     "cron",

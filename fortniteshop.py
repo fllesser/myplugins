@@ -46,9 +46,3 @@ shopshop = on_command("商城", priority=5, block=True)
 @shopshop.handle()
 async def _():
     await shopshop.finish(message=image("https://cdn.dingpanbao.cn/blzy/shop.png"))
-
-to_chinese = on_regex(pattern="汉化")
-@to_chinese.handle()
-async def _():
-    yuque_url = "https://sourl.cn/XdGMRr"
-    await to_chinese.finish(message=f"汉化网址: {yuque_url}\n关于汉化, 月卡, PVE等问题, 可前往该站寻找")

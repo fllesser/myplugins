@@ -1,13 +1,17 @@
 import random, os
 from time import sleep
 from services.log import logger
-from nonebot.adapters.onebot.v11 import Message
+from nonebot.adapters.onebot.v11 import Message, PrivateMessageEvent
 from utils.utils import scheduler, get_bot
+from nonebot import on_command
+from nonebot.permission import SUPERUSER
+
 
 __zx_plugin_name__ = "今日校园自动签到 [Hidden]"
 __plugin_version__ = 0.1
 __plugin_author__ = "YiJiuChow"
 __plugin_task__ = {'atcp': '今日校园自动签到'}
+
 
 
 @scheduler.scheduled_job(
@@ -52,3 +56,12 @@ async def addtsj():
         logger.info(f"添加今日校园定时任务任务 SUCCESS {interval_hours}时{interval_minutes}分")
     except Exception as e:
         logger.error(f"添加今日校园任务错误 {e}")
+
+cp_daily = on_command("tsc", priority=5, permission=SUPERUSER, block=True)
+
+@cp_daily.handle()
+async def _(event: PrivateMessageEvent):
+    try:
+        await ts()
+    except:
+        pass
