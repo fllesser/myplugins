@@ -29,7 +29,6 @@ async def get_kicked_list(bot: Bot, group_id: int, kicked_num: int) -> List[Dict
                 await GroupInfoUserByMe.delete_member_info(user_qq=member_qq, group_id=group_id)
                 continue
             if (now_time - int(member["last_sent_time"]) > 7777777) and int(member["level"]) < 20:
-                # members[member["user_id"]] = member["card"] if not member["card"] == "" else member["nickname"]
                 members.append(member)
             if len(members) == kicked_num:
                 return members
