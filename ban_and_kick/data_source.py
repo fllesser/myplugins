@@ -18,8 +18,7 @@ async def get_kicked_list(bot: Bot, group_id: int, kicked_num: int) -> List[Dict
                 group_id=group_id,
                 user_num=100,
                 off_set=(i - 1) * 100 + 1
-            )
-            logger.info(f"当前查询第{i}页, 已匹配的待踢人数{len(members)}")
+            )        
         except:
             return members
         for member_qq in gm_list:
@@ -32,5 +31,6 @@ async def get_kicked_list(bot: Bot, group_id: int, kicked_num: int) -> List[Dict
                 members.append(member)
             if len(members) == kicked_num:
                 return members
+        logger.info(f"当前查询第{i}页, 已匹配的待踢人数{len(members)}")
         if len(members) == 0:
             GroupInfoUserByMe.query_start_dict[str(group_id)] += 1
