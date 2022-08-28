@@ -37,7 +37,7 @@ async def _(bot: Bot, event: Event, state:T_State=State(), args: Message = Comma
     try:
         playerstats = await api.stats.fetch_by_name(nickname,image=StatsImageType.ALL)
         url = playerstats.image_url
-        # 匹配中文
+        # 匹配带中文昵称
         if re.search(r'[\u2E80-\u9FFF]', nickname, flags=0):
             
             response = await httpx.get(url)
