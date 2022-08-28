@@ -1,4 +1,4 @@
-from secrets import choice
+from random import choice
 from services.log import logger
 import time
 from utils.utils import scheduler, get_bot
