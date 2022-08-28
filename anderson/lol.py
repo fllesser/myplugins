@@ -1,6 +1,6 @@
 from nonebot.plugin import on_command
 
-lol = on_command("lolzh")
+lol = on_command("lolzh", block=True)
 
 @lol.handle()
 async def _():

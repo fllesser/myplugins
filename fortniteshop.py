@@ -28,7 +28,7 @@ __plugin_settings__ = {
 @scheduler.scheduled_job(
     "cron",
     hour=8,
-    minute=3,
+    minute=2,
 )
 async def shopupshop():
     try:

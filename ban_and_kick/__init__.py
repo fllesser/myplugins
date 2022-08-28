@@ -32,7 +32,6 @@ __plugin_configs__ = {
 }
 
 
-
 banuser = on_command("ban", aliases={"禁"}, priority=5, block=True)
 kickuser = on_command("kick", aliases={"踢"}, priority=5, block=True)
 kugm = on_command("kugm", priority=5, permission=SUPERUSER, block=True)
@@ -79,12 +78,10 @@ async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
     if is_number(msg) and not (int(msg) < 0 or int(msg) > 30):
         kicked_num = int(msg)
     message_str = ""
-    # for qq, nick_name in members.items():
     for member in await get_kicked_list(bot=bot, group_id=event.group_id, kicked_num=kicked_num):
         await bot.set_group_kick(group_id=event.group_id, user_id=member["user_id"])
         await GroupInfoUserByMe.delete_member_info(user_qq=member["user_id"], group_id=event.group_id)
-        # logger.info(f"group_id={event.group_id} user_id={member['user_id']} 活跃等级:{member['level']} 已踢")
-        logger.info(f"{member}--->>>kicked")
+        logger.info(f"{member} -> kicked")
         message_str += f"{member['user_id']} {(member['card'] if not member['card'] == '' else member['nickname'])}\n"
         await asyncio.sleep(1)
-    await kugm.finish(message=f"{message_str}通通被我送走了捏")
+    await kugm.finish(message=f"{message_str} 通通被我送走了捏")

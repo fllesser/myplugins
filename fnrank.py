@@ -31,7 +31,7 @@ __plugin_settings__ = {
 
 api = fortnite_api.FortniteAPI(api_key = "f3f4e682-346e-45b1-8323-fe77aaea2a68",run_async = True)
 
-fortniterank = on_command("战绩")
+fortniterank = on_command("战绩", block=True)
 @fortniterank.handle()
 async def _(bot: Bot, event: Event, state:T_State=State(), args: Message = CommandArg()):
     nickname = args.extract_plain_text()
