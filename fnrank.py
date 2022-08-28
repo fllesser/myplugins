@@ -3,8 +3,7 @@ from nonebot.plugin import on_command
 from nonebot.adapters.onebot.v11 import Bot, Event, Message
 from utils.message_builder import image
 from services.log import logger
-import fortnite_api
-from fortnite_api import StatsImageType
+from fortnite_api import StatsImageType, FortniteAPI
 from PIL import Image, ImageFont, ImageDraw
 from io import BytesIO
 import httpx, re, base64
@@ -29,7 +28,7 @@ __plugin_settings__ = {
 }
 
 
-api = fortnite_api.FortniteAPI(api_key = "f3f4e682-346e-45b1-8323-fe77aaea2a68",run_async = True)
+api = FortniteAPI(api_key = "f3f4e682-346e-45b1-8323-fe77aaea2a68",run_async = True)
 
 fortniterank = on_command("战绩", block=True)
 @fortniterank.handle()
@@ -38,10 +37,10 @@ async def _(bot: Bot, event: Event, state:T_State=State(), args: Message = Comma
     try:
         playerstats = await api.stats.fetch_by_name(nickname,image=StatsImageType.ALL)
         url = playerstats.image_url
-        
+        # 匹配中文
         if re.search(r'[\u2E80-\u9FFF]', nickname, flags=0):
             
-            response = httpx.get(url)
+            response = await httpx.get(url)
             im = Image.open(BytesIO(response.content))
             draw = ImageDraw.Draw(im) 
             # 覆盖

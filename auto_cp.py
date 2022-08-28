@@ -13,7 +13,6 @@ __plugin_author__ = "YiJiuChow"
 __plugin_task__ = {'atcp': '今日校园自动签到'}
 
 
-
 @scheduler.scheduled_job(
     "cron",
     hour=23,
