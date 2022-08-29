@@ -21,7 +21,7 @@ __plugin_task__ = {'atcp': '今日校园自动签到'}
 )
 async def ts():
     bot = get_bot()
-    ts_command = "python3 auto-cpdaily/index.py"
+    ts_command = f"python3 {os.path.dirname(__file__)}/auto-cpdaily/index.py"
     try:
         os.popen(ts_command)
         logger.info(f"今日校园 {ts_command} 开始执行")
