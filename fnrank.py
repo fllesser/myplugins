@@ -40,7 +40,7 @@ async def _(bot: Bot, event: Event, state:T_State=State(), args: Message = Comma
         # 匹配带中文昵称
         if re.search(r'[\u2E80-\u9FFF]', nickname, flags=0):
             
-            response = await httpx.get(url)
+            response = httpx.get(url)
             im = Image.open(BytesIO(response.content))
             draw = ImageDraw.Draw(im) 
             # 覆盖
