@@ -1,7 +1,7 @@
 import random, os
 from time import sleep
 from services.log import logger
-from nonebot.adapters.onebot.v11 import Message, PrivateMessageEvent
+from nonebot.adapters.onebot.v11 import Message, MessageEvent
 from utils.utils import scheduler, get_bot
 from nonebot import on_command
 from nonebot.permission import SUPERUSER
@@ -19,7 +19,7 @@ async def ts():
     try:
         os.popen(ts_command)
         logger.info(f"今日校园 {ts_command} 开始执行")
-        sleep(15)
+        sleep(60)
         with open("success.info", 'r') as f:
             str = f.read()
         logger.info(f"今日校园自动签到任务执行 {str}")
@@ -27,9 +27,9 @@ async def ts():
         logger.error(f"今日校园错误 {e}")
     if bot:
         try:
-            superusers_set = bot.config.superusers
-            for superuser in superusers_set:
-                await bot.send_private_msg(user_id=int(superuser), message=Message(f"今日校园签到状态: {str}"))
+            #superusers_set = bot.config.superusers
+            #for superuser in superusers_set:
+            await bot.send_group_msg(group_id=774331907, message=Message(f"今日校园签到状态: \n{str}"))
         except Exception as e:
             logger.error(f"今日校园插件推送结果错误 {e}")   
 
@@ -67,7 +67,7 @@ async def _():
 cp_daily = on_command("tsc", priority=5, permission=SUPERUSER, block=True)
 
 @cp_daily.handle()
-async def _(event: PrivateMessageEvent):
+async def _(event: MessageEvent):
     try:
         await ts()
     except:
