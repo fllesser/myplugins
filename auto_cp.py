@@ -31,7 +31,7 @@ async def ts():
         try:
             #superusers_set = bot.config.superusers
             #for superuser in superusers_set:
-            await bot.send_group_msg(group_id=774331907, message=Message(f"今日校园签到状态: \n{str}"))
+            await bot.send_group_msg(group_id=774331907, message=Message(f"今日校园签到状态: {str}"))
         except Exception as e:
             logger.error(f"今日校园插件推送结果错误 {e}")   
 
@@ -59,7 +59,7 @@ async def _():
     try:
         scheduler.remove_job("today_school")
         interval_minutes = random.randint(1, 59)
-        interval_hours = random.randint(10, 15)
+        interval_hours = random.randint(7, 10)
         scheduler.add_job(ts, "cron", hour=interval_hours, minute=interval_minutes, id='today_school')
         logger.info(f"添加今日校园定时任务任务 SUCCESS {interval_hours}时{interval_minutes}分")
     except Exception as e:
