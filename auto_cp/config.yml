@@ -1,0 +1,67 @@
+###############################################################################
+# 本项目的源代码在MPL2.0协议下发布，同时附加以下条目：                            #
+# 非商业性使用 — 不得将此项目及其衍生的项目的源代码和二进制产品用于任何商业和盈利用途#
+###############################################################################
+# 消息推送配置，method 0 为禁用 1 为webApi模式 2 为APPRISE模式(该模式支持邮箱、钉钉、ServerChan等推送渠道)，
+# 配置方法请参考https://github.com/caronc/apprise/wiki
+notifyOption:
+    method: 0
+    #############1 webApi配置,根据不同api可能需要自行修改推送模块
+    mailApiUrl: 'http://api.ruoli.cc/mail/sendMail'
+# 默认不填，如需使用先开通腾讯云OCR服务，再申请API密钥
+ocrOption:
+    SecretId: 'APIid'
+    SecretKey: 'APIkey'
+# 如IP被拦截，可设置全局HTTP代理
+httpProxy: ''
+#用户组配置
+##################################################
+# 温馨提示：请仔细注意每个模板是属于哪个任务类型的配置！##
+##################################################
+users:
+    # 第一个用户配置
+    # 以下配置为工作日志
+    # 这里默认仅适配宜宾学院，其他学校自行修改
+    - user:
+        # 任务类型（收集：0、签到：1、查寝：2、政工签到：3、教师工作日志：4）
+        type: 1
+        # school 学校全称
+        schoolName: 武汉轻工大学
+        # username 学号或者工号
+        username: '1903090230'
+        # password 密码
+        password: '261806594zyj'
+        # 地址信息
+        address: '湖北省武汉市东西湖区环湖中路36号'
+        notifyOption: 
+            # method和顶部参数一致，不填默认按照顶部参数执行
+            # method: 0
+            # rcvOption为接受消息的配置，method为1时直接填写邮箱即可，method为2时请参考
+            # https://github.com/caronc/apprise/wiki进行配置
+            # 示例1 规则: 'mailto://邮箱账号:邮箱密码@邮箱名.com' 示范: 'mailto://账号:密码@163.com'
+            # 示例2 规则: 'mailto://发信邮箱账号:发信邮箱密码@发信邮箱名.com/?to=收信人邮箱' 示范: 'mailto://账号:密码@163.com/?to=收信邮箱@qq.com'
+            # 注意！！！一部分邮箱（如163邮箱）需要在设置中申请smtp授权码，此处的邮箱密码填写授权码
+            # 账号是邮箱@符号前的部分，比如admin@163.com的用户名就是admin
+            rcvOption: 'mailto://账号:密码@163.com'
+        # 附上经纬度查询地址（请自行选择自己的学校地址，address，lon，lat都要填查询到的）：http://api.map.baidu.com/lbsapi/getpoint/index.html
+        # lon 经度,
+        lon: 114.228926
+        # lat 纬度
+        lat: 30.659446
+        # 可以指定签到任务
+        # formTitle: "2月31日每日签到"
+        # 是否检查表单的标题（1代表检查，0代表不检查）
+        checkTitle: 1
+        # 表单信息
+        forms:
+            - form:
+                title: 是否发热送医？
+                value: 否
+            - form:
+                title: 所在地是否为中高风险地区？
+                value: 否
+            
+    # 第二个用户配置
+    # 以下配置为信息收集
+    # 这里默认仅适配宜宾学院，其他学校自行修改
+    # -user
