@@ -12,13 +12,7 @@ __plugin_version__ = 0.1
 __plugin_author__ = "YiJiuChow"
 __plugin_task__ = {'atcp': '今日校园自动签到'}
 
-
-@scheduler.scheduled_job(
-    "cron",
-    hour=23,
-    minute=25,
-    id='today_school'
-)
+# 签到函数
 async def ts():
     bot = get_bot()
     ts_command = "python3 auto-cpdaily/index.py"
@@ -43,10 +37,23 @@ async def ts():
 @scheduler.scheduled_job(
     "cron",
     hour=23,
+    minute=25,
+    id='today_school'
+)
+async def _():
+    try:
+        await ts()
+    except:
+        pass
+
+
+@scheduler.scheduled_job(
+    "cron",
+    hour=23,
     minute=45,
     id='add_today_school_job'
 ) 
-async def addtsj():
+async def _():
     try:
         scheduler.remove_job("today_school")
         interval_minutes = random.randint(1, 59)
@@ -56,6 +63,7 @@ async def addtsj():
     except Exception as e:
         logger.error(f"添加今日校园任务错误 {e}")
 
+# 今日校园手动签到命令
 cp_daily = on_command("tsc", priority=5, permission=SUPERUSER, block=True)
 
 @cp_daily.handle()
