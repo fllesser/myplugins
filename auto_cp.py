@@ -5,7 +5,7 @@ from nonebot.adapters.onebot.v11 import Message, MessageEvent
 from utils.utils import scheduler, get_bot
 from nonebot import on_command
 from nonebot.permission import SUPERUSER
-
+import asyncio
 
 __zx_plugin_name__ = "今日校园自动签到 [Hidden]"
 __plugin_version__ = 0.1
@@ -17,9 +17,11 @@ async def ts():
     bot = get_bot()
     ts_command = "python3 auto-cpdaily/index.py"
     try:
+        if os.path.exists("success.info"):
+            os.remove("success.info")
         os.popen(ts_command)
         logger.info(f"今日校园 {ts_command} 开始执行")
-        sleep(60)
+        await asyncio.sleep(60)
         with open("success.info", 'r') as f:
             str = f.read()
         logger.info(f"今日校园自动签到任务执行 {str}")

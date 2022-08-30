@@ -4,7 +4,7 @@ from services.log import logger
 from nonebot import on_command
 from nonebot.params import CommandArg
 from nonebot.permission import SUPERUSER
-from time import sleep
+import asyncio
 
 from .model import GroupInfoUserByMe
 from .data_source import get_kicked_list
@@ -83,5 +83,5 @@ async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
         await GroupInfoUserByMe.delete_member_info(user_qq=member["user_id"], group_id=event.group_id)
         logger.info(f"{member} -> kicked")
         message_str += f"{member['user_id']} {(member['card'] if not member['card'] == '' else member['nickname'])}\n"
-        sleep(1)
+        await asyncio.sleep(1)
     await kugm.finish(message=f"{message_str} 通通被我送走了捏")
