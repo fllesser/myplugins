@@ -21,7 +21,7 @@ async def ts():
             os.remove("success.info")
         os.popen(ts_command)
         logger.info(f"今日校园 {ts_command} 开始执行")
-        await asyncio.sleep(60)
+        await asyncio.sleep(80)
         with open("success.info", 'r') as f:
             str = f.read()
         logger.info(f"今日校园自动签到任务执行 {str}")
