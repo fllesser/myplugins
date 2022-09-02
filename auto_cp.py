@@ -1,7 +1,7 @@
 import random, os
 from time import sleep
 from services.log import logger
-from nonebot.adapters.onebot.v11 import Message, MessageEvent
+from nonebot.adapters.onebot.v11 import Message, MessageEvent, PrivateMessageEvent, Bot
 from utils.utils import scheduler, get_bot
 from nonebot import on_command
 from nonebot.permission import SUPERUSER
@@ -35,7 +35,7 @@ async def ts():
         except Exception as e:
             logger.error(f"今日校园插件推送结果错误 {e}")   
 
-
+# 默认定时任务
 @scheduler.scheduled_job(
     "cron",
     hour=23,
@@ -61,7 +61,7 @@ async def _():
         interval_minutes = random.randint(1, 59)
         interval_hours = random.randint(7, 10)
         scheduler.add_job(ts, "cron", hour=interval_hours, minute=interval_minutes, id='today_school')
-        logger.info(f"添加今日校园定时任务任务 SUCCESS {interval_hours}时{interval_minutes}分")
+        logger.info(f"添加今日校园定时任务 SUCCESS {interval_hours}时{interval_minutes}分")
     except Exception as e:
         logger.error(f"添加今日校园任务错误 {e}")
 
@@ -74,3 +74,20 @@ async def _(event: MessageEvent):
         await ts()
     except:
         pass
+
+# 今日校园手动添加任务命令
+add_cp_daily = on_command("addtsc", priority=5, permission=SUPERUSER, block=True)
+
+@add_cp_daily.handle()
+async def _(event: PrivateMessageEvent):
+    try:
+        scheduler.remove_job("today_school")
+        interval_minutes = random.randint(1, 59)
+        interval_hours = random.randint(7, 9)
+        scheduler.add_job(ts, "cron", hour=interval_hours, minute=interval_minutes, id='today_school')
+        str = f"手动添加今日校园定时任务 SUCCESS {interval_hours}时{interval_minutes}分"
+        logger.info(str)
+        await add_cp_daily.finish(message=str)
+    except:
+        pass
+        
