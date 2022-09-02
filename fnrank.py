@@ -1,14 +1,16 @@
 from nonebot.params import T_State,State, CommandArg
 from nonebot.plugin import on_command
 from nonebot.adapters.onebot.v11 import Bot, Event, Message
+
 from utils.message_builder import image
-from configs.path_config import FONT_PATH
 from utils.image_utils import pic2b64
+from configs.path_config import FONT_PATH
 from services.log import logger
+
 from fortnite_api import StatsImageType, FortniteAPI
 from PIL import Image, ImageFont, ImageDraw
 from io import BytesIO
-import httpx, re, base64
+import httpx, re
 
 __zx_plugin_name__ = "堡垒之夜战绩查询"
 __plugin_usage__ = """
@@ -41,7 +43,6 @@ async def _(bot: Bot, event: Event, state:T_State=State(), args: Message = Comma
         url = playerstats.image_url
         # 匹配带中文昵称
         if re.search(r'[\u2E80-\u9FFF]', nickname, flags=0):
-            
             response = httpx.get(url)
             im = Image.open(BytesIO(response.content))
             draw = ImageDraw.Draw(im) 
@@ -52,10 +53,10 @@ async def _(bot: Bot, event: Event, state:T_State=State(), args: Message = Comma
             nickname_len = (len(nickname) - cn_len + 0.0) / 2 + cn_len
             font_size = 30
             X = max((225 - nickname_len * font_size / 2), 0)
+            
             font = "yz.ttf"
             ttfont = ImageFont.truetype(str(FONT_PATH / font), font_size)
             draw.text((X, 150), f'{nickname}', fill = "#fafafa", font=ttfont)
-
             await fortniterank.finish(message=image(b64=pic2b64(im)))
         else:
             await fortniterank.finish(message=image(url))
