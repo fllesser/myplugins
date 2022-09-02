@@ -3,6 +3,7 @@ from nonebot.plugin import on_command
 from nonebot.adapters.onebot.v11 import Bot, Event, Message
 from utils.message_builder import image
 from configs.path_config import FONT_PATH
+from utils.image_utils import pic2b64
 from services.log import logger
 from fortnite_api import StatsImageType, FortniteAPI
 from PIL import Image, ImageFont, ImageDraw
@@ -51,12 +52,11 @@ async def _(bot: Bot, event: Event, state:T_State=State(), args: Message = Comma
             nickname_len = (len(nickname) - cn_len + 0.0) / 2 + cn_len
             font_size = 30
             X = max((225 - nickname_len * font_size / 2), 0)
-            font = "simhei.ttf"
+            font = "yz.ttf"
             ttfont = ImageFont.truetype(str(FONT_PATH / font), font_size)
             draw.text((X, 150), f'{nickname}', fill = "#fafafa", font=ttfont)
 
-            imstr = image_to_base64(im)
-            await fortniterank.finish(message=image(b64=imstr))
+            await fortniterank.finish(message=image(b64=pic2b64(im)))
         else:
             await fortniterank.finish(message=image(url))
     except Exception as e:
@@ -67,9 +67,9 @@ async def _(bot: Bot, event: Event, state:T_State=State(), args: Message = Comma
             await fortniterank.finish(message=e)
 
 
-def image_to_base64(image: Image.Image, fmt='png') -> str:
-    output_buffer = BytesIO()
-    image.save(output_buffer, format=fmt)
-    byte_data = output_buffer.getvalue()
-    base64_str = base64.b64encode(byte_data).decode('utf-8')
-    return f'base64://{base64_str}'
+# def image_to_base64(image: Image.Image, fmt='png') -> str:
+#     output_buffer = BytesIO()
+#     image.save(output_buffer, format=fmt)
+#     byte_data = output_buffer.getvalue()
+#     base64_str = base64.b64encode(byte_data).decode('utf-8')
+#     return f'base64://{base64_str}'
