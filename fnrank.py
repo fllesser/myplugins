@@ -53,7 +53,6 @@ async def _(bot: Bot, event: Event, state:T_State=State(), args: Message = Comma
             nickname_len = (len(nickname) - cn_len + 0.0) / 2 + cn_len
             font_size = 30
             X = max((225 - nickname_len * font_size / 2), 0)
-            
             font = "yz.ttf"
             ttfont = ImageFont.truetype(str(FONT_PATH / font), font_size)
             draw.text((X, 150), f'{nickname}', fill = "#fafafa", font=ttfont)
