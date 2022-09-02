@@ -65,11 +65,3 @@ async def _(bot: Bot, event: Event, state:T_State=State(), args: Message = Comma
             logger.info("战绩查询成功")
         else:
             await fortniterank.finish(message=e)
-
-
-# def image_to_base64(image: Image.Image, fmt='png') -> str:
-#     output_buffer = BytesIO()
-#     image.save(output_buffer, format=fmt)
-#     byte_data = output_buffer.getvalue()
-#     base64_str = base64.b64encode(byte_data).decode('utf-8')
-#     return f'base64://{base64_str}'
