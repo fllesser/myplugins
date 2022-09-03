@@ -4,7 +4,7 @@ import time
 from utils.utils import scheduler, get_bot
 
 
-__zx_plugin_name__ = "宇宙无敌究极帅的时间群昵称"
+__zx_plugin_name__ = "时间群昵称"
 __plugin_version__ = 0.1
 __plugin_author__ = "YiJiuChow"
 

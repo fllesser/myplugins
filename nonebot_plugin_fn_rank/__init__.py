@@ -19,7 +19,6 @@ usage：
     指令：
         战绩
 """.strip()
-__plugin_type__ = ("功能")
 __plugin_des__ = "堡垒之夜战绩查询"
 __plugin_cmd__ = ["战绩"]
 __plugin_version__ = 0.1

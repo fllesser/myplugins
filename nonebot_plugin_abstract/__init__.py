@@ -8,7 +8,6 @@ from .data import text_to_emoji
 
 __zx_plugin_name__ = "抽象化语句"
 __plugin_des__ = "抽象化"
-__plugin_type__ = ("功能",)
 __plugin_usage__ = """
 usage:
     抽象化语句

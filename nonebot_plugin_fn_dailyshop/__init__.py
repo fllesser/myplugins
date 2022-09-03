@@ -17,7 +17,7 @@ __plugin_des__ = "堡垒之夜每日商城"
 __plugin_cmd__ = ["商城"]
 __plugin_version__ = 0.1
 __plugin_author__ = "YiJiu Chow"
-__plugin_task__ = {"fn":"商城"}
+__plugin_task__ = {"fn":"堡垒之夜商城推送"}
 __plugin_settings__ = {
     "level": 5,
     "default_status": True,

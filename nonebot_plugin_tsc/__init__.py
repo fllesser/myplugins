@@ -10,8 +10,6 @@ import asyncio
 __zx_plugin_name__ = "今日校园自动签到 [Hidden]"
 __plugin_version__ = 0.1
 __plugin_author__ = "YiJiuChow"
-__plugin_task__ = {'atcp': '今日校园自动签到'}
-
 
 # 默认定时任务
 @scheduler.scheduled_job(

@@ -22,7 +22,6 @@ from .models import UserInfo, Command
 
 __zx_plugin_name__ = "petpet"
 __plugin_des__ = "摸头等头像相关表情制作"
-__plugin_type__ = ("功能",)
 __plugin_usage__ = """
 usage:
     头像表情包
