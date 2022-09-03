@@ -1,4 +1,4 @@
-utils
-services
-configs
-models
+utils/
+services/
+configs/
+models/
