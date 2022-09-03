@@ -1,40 +1,8 @@
-# mypluginsfrom random import choice
-from services.log import logger
-import time
-from utils.utils import scheduler, get_bot
-
-
-__zx_plugin_name__ = "宇宙无敌究极帅的时间群昵称"
-__plugin_version__ = 0.1
-__plugin_author__ = "YiJiuChow"
-
-lz_list = ["绿头鸡", "鸡脖哥", "鸡脖王", "鸡脖哥哥"]
-
-@scheduler.scheduled_job(
-    "interval",
-    minutes=1
-)
-async def _():
-    try:
-        bot = get_bot()
-        gl = await bot.call_api("get_group_list")
-        gl = [g["group_id"] for g in gl]
-        timestr = time.strftime("%a %b %d %H:%M %Y CST", time.localtime())
-        for g in gl:
-            await bot.set_group_card(group_id=g, user_id=bot.self_id, card=f"大头 {timestr}")
-        await bot.set_group_card(group_id=774331907, user_id=1626303708, card=choice(lz_list)) 
-    except Exception as e:
-        logger.error(f"error: {e}")
-
-@scheduler.scheduled_job(
-    "cron",
-    hour=6,
-    minute=0,
-)
-async def _():
-    try:
-        bot = get_bot()
-        timestr = time.strftime("%a %b %d %Y CST", time.localtime())
-        await bot.call_api("set_qq_profile", nickname=f"大头 {timestr}")
-    except Exception as e:
-        logger.error(f"set_qq_profile error: {e}")
+# 适用于zhenxun_bot的插件
+- nonebot_plugin_abstract : 抽象化语句
+- nonebot_plugin_auto_nickname : 时间昵称
+- nonebot_plugin_fn_dailyshop : 堡垒之夜每日商城
+- nonebot_plugin_fn_rank : 堡垒之夜战绩查询
+- nonebot_plugin_gm_manager : 群成员管理 (踢/禁 踢不活跃用户)
+- nonebot_plugin_petpet : 头像表情包
+- nonebot_plugin_tsc : 今日校园自动签到
