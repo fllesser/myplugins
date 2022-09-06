@@ -12,10 +12,6 @@ usage：
     指令：
         商城
 """.strip()
-__plugin_type__ = ("被动相关",)
-__plugin_des__ = "堡垒之夜每日商城"
-__plugin_cmd__ = ["商城"]
-__plugin_version__ = 0.1
 __plugin_author__ = "YiJiu Chow"
 __plugin_task__ = {"fn":"堡垒之夜商城推送"}
 __plugin_settings__ = {

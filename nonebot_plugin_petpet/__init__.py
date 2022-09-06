@@ -20,7 +20,7 @@ from .utils import help_image
 from .models import UserInfo, Command
 
 
-__zx_plugin_name__ = "petpet"
+__zx_plugin_name__ = "头像表情包"
 __plugin_des__ = "摸头等头像相关表情制作"
 __plugin_usage__ = """
 usage:
