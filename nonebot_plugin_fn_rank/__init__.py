@@ -42,6 +42,7 @@ async def _(bot: Bot, event: Event, state:T_State=State(), args: Message = Comma
     try:
         playerstats = await api.stats.fetch_by_name(nickname,image=StatsImageType.ALL)
         url = playerstats.image_url
+        result = None
         # 匹配带中文昵称
         if re.search(r'[\u2E80-\u9FFF]', nickname, flags=0):
             response = httpx.get(url)
@@ -57,10 +58,11 @@ async def _(bot: Bot, event: Event, state:T_State=State(), args: Message = Comma
             font = "yz.ttf"
             ttfont = ImageFont.truetype(str(FONT_PATH / font), font_size)
             draw.text((X, 150), f'{nickname}', fill = "#fafafa", font=ttfont)
+            result = im
     except Exception as e:
         await fortniterank.finish(message=str(e))
     logger.info("战绩查询成功")
-    if im is not None:
-        await fortniterank.finish(message=image(b64=pic2b64(im)))
+    if result is not None:
+        await fortniterank.finish(message=image(b64=pic2b64(result)))
     else:
         await fortniterank.finish(message=image(url))

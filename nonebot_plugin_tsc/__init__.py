@@ -28,7 +28,7 @@ async def ts(): # 签到函数
         await asyncio.sleep(80)
         with open("success.info", 'r') as f:
             str = f.read()
-        logger.info(f"今日校园自动签到任务执行 {str}")
+        logger.info(f"今日校园自动签到任务执行完毕 {str}")
     except Exception as e:
         logger.error(f"今日校园错误 {e}")
     if bot:
