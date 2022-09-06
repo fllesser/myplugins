@@ -1,7 +1,6 @@
 import random, os
-from time import sleep
 from services.log import logger
-from nonebot.adapters.onebot.v11 import Message, MessageEvent, PrivateMessageEvent, Bot
+from nonebot.adapters.onebot.v11 import Message, PrivateMessageEvent
 from utils.utils import scheduler, get_bot
 from nonebot import on_command
 from nonebot.permission import SUPERUSER
@@ -60,7 +59,7 @@ async def _():
 cp_daily = on_command("tsc", priority=5, permission=SUPERUSER, block=True)
 
 @cp_daily.handle()
-async def _(event: MessageEvent):
+async def _(event: PrivateMessageEvent):
     try:
         await ts()
     except:
