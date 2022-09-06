@@ -36,7 +36,6 @@ banuser = on_command("ban", aliases={"禁"}, priority=5, block=True)
 kickuser = on_command("kick", aliases={"踢"}, priority=5, block=True)
 kugm = on_command("kugm", priority=5, permission=SUPERUSER, block=True)
 
-
 @banuser.handle()
 async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
     try:

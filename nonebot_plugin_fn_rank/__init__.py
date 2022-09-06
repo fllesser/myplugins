@@ -37,6 +37,8 @@ fortniterank = on_command("战绩", block=True)
 @fortniterank.handle()
 async def _(bot: Bot, event: Event, state:T_State=State(), args: Message = CommandArg()):
     nickname = args.extract_plain_text()
+    if nickname is None or nickname == '':
+        await fortniterank.finish(message="ID都没, 查个鬼的战绩蛮")
     try:
         playerstats = await api.stats.fetch_by_name(nickname,image=StatsImageType.ALL)
         url = playerstats.image_url
@@ -55,12 +57,10 @@ async def _(bot: Bot, event: Event, state:T_State=State(), args: Message = Comma
             font = "yz.ttf"
             ttfont = ImageFont.truetype(str(FONT_PATH / font), font_size)
             draw.text((X, 150), f'{nickname}', fill = "#fafafa", font=ttfont)
-            await fortniterank.finish(message=image(b64=pic2b64(im)))
-        else:
-            await fortniterank.finish(message=image(url))
     except Exception as e:
-        e = str(e)
-        if e is None or e == "":
-            logger.info("战绩查询成功")
-        else:
-            await fortniterank.finish(message=e)
+        await fortniterank.finish(message=str(e))
+    logger.info("战绩查询成功")
+    if im is not None:
+        await fortniterank.finish(message=image(b64=pic2b64(im)))
+    else:
+        await fortniterank.finish(message=image(url))

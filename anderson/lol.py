@@ -13,3 +13,4 @@ async def _():
     for i in lollist:
         msg += f"{i}\t{lollist[i]}\n"
     await lol.finish(message=msg)
+
