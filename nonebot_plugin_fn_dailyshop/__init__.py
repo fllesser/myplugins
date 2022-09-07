@@ -1,9 +1,8 @@
-from nonebot.plugin import on_command
 from utils.utils import scheduler, get_bot
 from utils.manager import group_manager
 from utils.message_builder import image
 from services.log import logger
-from nonebot import on_command
+from nonebot.plugin import on_command
 
 __zx_plugin_name__ = "堡垒之夜每日商城"
 __plugin_usage__ = """
@@ -12,7 +11,7 @@ usage：
     指令：
         商城
 """.strip()
-__plugin_type__ = ("其他",)
+__plugin_type__ = ("其他")
 __plugin_author__ = "YiJiu Chow"
 __plugin_task__ = {"fn":"堡垒之夜商城推送"}
 __plugin_settings__ = {

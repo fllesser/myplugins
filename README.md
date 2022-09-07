@@ -6,3 +6,4 @@
 - nonebot_plugin_gm_manager : 群成员管理 (踢/禁 踢不活跃用户)
 - nonebot_plugin_petpet : 头像表情包
 - nonebot_plugin_tsc : 今日校园自动签到
+- nonebot_plugin_stw : fortnite stw 每日 vb 图

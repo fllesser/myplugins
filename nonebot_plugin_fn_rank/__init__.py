@@ -1,4 +1,4 @@
-from nonebot.params import T_State,State, CommandArg
+from nonebot.params import CommandArg
 from nonebot.plugin import on_command
 from nonebot.adapters.onebot.v11 import Bot, Event, Message
 
@@ -31,11 +31,11 @@ __plugin_settings__ = {
 }
 
 
-api = FortniteAPI(api_key = "f3f4e682-346e-45b1-8323-fe77aaea2a68",run_async = True)
+api = FortniteAPI(api_key = "f3f4e682-346e-45b1-8323-fe77aaea2a68", run_async = True)
 
 fortniterank = on_command("战绩", block=True)
 @fortniterank.handle()
-async def _(bot: Bot, event: Event, state:T_State=State(), args: Message = CommandArg()):
+async def _(bot: Bot, event: Event, args: Message = CommandArg()):
     nickname = args.extract_plain_text()
     if nickname is None or nickname == '':
         await fortniterank.finish(message="ID都没, 查个鬼的战绩蛮")
