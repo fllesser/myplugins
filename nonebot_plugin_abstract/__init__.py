@@ -24,7 +24,6 @@ __plugin_settings__ = {
     "cmd": ["abs"],
 }
 
-
 abstract = on_command("abs", aliases={"抽象", "抽象化"}, priority=5, block=True)
 
 @abstract.handle()

@@ -11,7 +11,6 @@ usage：
     指令：
         商城
 """.strip()
-__plugin_type__ = ("其他")
 __plugin_author__ = "YiJiu Chow"
 __plugin_task__ = {"fn":"堡垒之夜商城推送"}
 __plugin_settings__ = {
@@ -35,8 +34,8 @@ async def shopupshop():
             if await group_manager.check_group_task_status(g, 'fn'):
                 result = image("https://cdn.dingpanbao.cn/blzy/shop.png")
                 await bot.send_group_msg(group_id=g, message=result) 
-    except:
-        logger.error("商城错误")
+    except Exception as e:
+        logger.error("堡垒之夜商城错误 {e}")
 
 shopshop = on_command("商城", priority=5, block=True)    
 @shopshop.handle()

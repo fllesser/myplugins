@@ -8,7 +8,7 @@ from configs.path_config import IMAGE_PATH
 from utils.message_builder import image
 from utils.manager import group_manager
 
-from .data_source import get_vbmap_byhttpx
+from .data_source import update_daily_vb
 
 __zx_plugin_name__ = "STW(PVE)"
 __plugin_usage__ = """
@@ -26,16 +26,16 @@ __plugin_settings__ = {
     "cmd": ["pve"],
 }
 
-pve = on_command("pve", priority=5, block=True)
+pve = on_command("pve", aliases={"vb图", "VB图", "V币图", "v币图"}, priority=5, block=True)
 @pve.handle()
 async def _():
     await pve.finish(message=image(IMAGE_PATH / "fn_stw.png"))
 
-update_pve = on_command("update pve", priority=5, block=True, permission=SUPERUSER)
+update_pve = on_command("u pve", priority=5, block=True, permission=SUPERUSER)
 @update_pve.handle()
 async def _(bot: Bot, event: GroupMessageEvent):
-    await get_vbmap_byhttpx()
-    await bot.send_group_msg(group_id=event.group_id,message="手动更新STW(PVE) vb图成功")
+    await update_daily_vb()
+    await bot.send_group_msg(group_id=event.group_id,message="手动更新 STW(PVE) vb图成功")
 
 @scheduler.scheduled_job(
     "cron",
@@ -44,12 +44,12 @@ async def _(bot: Bot, event: GroupMessageEvent):
 )
 async def _():
     try:
-        await get_vbmap_byhttpx()
+        await update_daily_vb()
         bot = get_bot()
         gl = await bot.get_group_list()
         gl = [g["group_id"] for g in gl]
         for g in gl:
             if await group_manager.check_group_task_status(g, 'pve'):
                 await bot.send_group_msg(group_id=g, message=image(IMAGE_PATH / "fn_stw.png")) 
-    except:
-        logger.error("PVE错误")
+    except Exception as e:
+        logger.error("PVE vb图更新错误 {e}")
