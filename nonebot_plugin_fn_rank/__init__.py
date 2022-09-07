@@ -60,9 +60,15 @@ async def _(bot: Bot, event: Event, state:T_State=State(), args: Message = Comma
             draw.text((X, 150), f'{nickname}', fill = "#fafafa", font=ttfont)
             result = im
     except Exception as e:
-        await fortniterank.finish(message=str(e))
+        result = str(e)
+        if "public" in result:
+            result = "战绩未公开"
+        elif "exist" in result:
+            result = "用户不存在"
+        await fortniterank.finish(message=result)
     logger.info("战绩查询成功")
     if result is not None:
-        await fortniterank.finish(message=image(b64=pic2b64(result)))
+        result = image(b64=pic2b64(result))
     else:
-        await fortniterank.finish(message=image(url))
+        result = image(url)
+    await fortniterank.finish(message=result)

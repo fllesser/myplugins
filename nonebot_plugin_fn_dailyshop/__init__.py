@@ -12,6 +12,7 @@ usage：
     指令：
         商城
 """.strip()
+__plugin_type__ = ("其他",)
 __plugin_author__ = "YiJiu Chow"
 __plugin_task__ = {"fn":"堡垒之夜商城推送"}
 __plugin_settings__ = {
