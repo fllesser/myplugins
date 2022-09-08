@@ -19,8 +19,7 @@ usage：
     指令：
         战绩 id
         群昵称(名片)设置为
-        ["id:", "id：", "id "]三选一(别带引号), 不区分大小写
-         + 你的游戏昵称
+        ["id:", "id：", "id "]三选一(别带引号), 不区分大小写 + 你的游戏昵称
         发送 战绩 可快速查询战绩
 """.strip()
 __plugin_type__ = ("堡批专属",)
@@ -39,7 +38,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
         if card is not None and card[0:3].casefold() in ["id:", "id：", "id ",]:
             nickname = card[3:len(card)] # 昵称替换为群名片id
         else:
-            await fortniterank.finish(message="群昵称(名片)设置为['id:', 'id：', 'id ']三选一(别带引号, 不区分大小写)\n加上你的游戏昵称发送 战绩 可快速查询战绩")
+            await fortniterank.finish(message="群昵称(名片)设置为\n['id:', 'id：', 'id ']三选一(不区分大小写)\n加上你的游戏昵称发送 战绩 可快速查询战绩")
     try:
         playerstats = await api.stats.fetch_by_name(nickname,image=StatsImageType.ALL)
         url = playerstats.image_url

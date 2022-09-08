@@ -2,3 +2,6 @@ utils/
 services/
 configs/
 models/
+test.py
+testutils.py
+gorga.otf
