@@ -4,6 +4,7 @@ configs/
 models/
 anderson/
 oswald/
+old/
 
 test.py
 testutils.py
