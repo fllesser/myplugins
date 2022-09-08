@@ -1,6 +1,6 @@
 from nonebot.params import CommandArg
 from nonebot.plugin import on_command
-from nonebot.adapters.onebot.v11 import Bot, Event, Message
+from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message
 
 from utils.message_builder import image
 from utils.image_utils import pic2b64
@@ -18,6 +18,10 @@ usage：
     堡垒之夜战绩查询
     指令：
         战绩 id
+        群昵称(名片)设置为
+        ["id:", "id：", "id "]三选一(别带引号), 不区分大小写
+         + 你的游戏昵称
+        发送 战绩 可快速查询战绩
 """.strip()
 __plugin_type__ = ("堡批专属",)
 __plugin_cmd__ = ["战绩"]
@@ -28,10 +32,14 @@ api = FortniteAPI(api_key = "f3f4e682-346e-45b1-8323-fe77aaea2a68", run_async = 
 
 fortniterank = on_command("战绩", block=True)
 @fortniterank.handle()
-async def _(bot: Bot, event: Event, args: Message = CommandArg()):
+async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     nickname = args.extract_plain_text()
     if nickname is None or nickname == '':
-        await fortniterank.finish(message="ID都没, 查个鬼的战绩蛮")
+        card = (await bot.get_group_member_info(user_id=event.user_id, group_id=event.group_id, no_cache=True))["card"]
+        if card is not None and card[0:3].casefold() in ["id:", "id：", "id ",]:
+            nickname = card[3:len(card)] # 昵称替换为群名片id
+        else:
+            await fortniterank.finish(message="群昵称(名片)设置为['id:', 'id：', 'id ']三选一(别带引号, 不区分大小写)\n加上你的游戏昵称发送 战绩 可快速查询战绩")
     try:
         playerstats = await api.stats.fetch_by_name(nickname,image=StatsImageType.ALL)
         url = playerstats.image_url
@@ -58,6 +66,8 @@ async def _(bot: Bot, event: Event, args: Message = CommandArg()):
             result = "战绩未公开"
         elif "exist" in result:
             result = "用户不存在"
+        elif "play any match" in result:
+            result = "该玩家最近没有进行过任何对局"
         await fortniterank.finish(message=result)
     logger.info("战绩查询成功")
     if result is not None:
