@@ -11,14 +11,10 @@ usage：
     指令：
         商城
 """.strip()
-__plugin_author__ = "YiJiu Chow"
+__plugin_type__ = ("堡批专属",)
+__plugin_cmd__ = ["商城"]
+__plugin_des__ = "堡垒之夜每日商城"
 __plugin_task__ = {"fn":"堡垒之夜商城推送"}
-__plugin_settings__ = {
-    "level": 5,
-    "default_status": True,
-    "limit_superuser": False,
-    "cmd": ["商城"],
-}
 
 @scheduler.scheduled_job(
     "cron",

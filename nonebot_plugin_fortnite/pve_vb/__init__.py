@@ -10,21 +10,18 @@ from utils.manager import group_manager
 
 from .data_source import update_daily_vb
 
-__zx_plugin_name__ = "STW(PVE)"
+__zx_plugin_name__ = "堡垒之夜每日vb图"
 __plugin_usage__ = """
 usage：
     堡垒之夜PVE
     指令：
-        pve
+        pve, vb图, v币图
 """.strip()
-__plugin_author__ = "YiJiu Chow"
+__plugin_type__ = ("堡批专属",)
+__plugin_cmd__ = ["vb图"]
+__plugin_des__ = "STW(PVE) 每日VB图"
 __plugin_task__ = {"pve":"堡垒之夜PVE推送"}
-__plugin_settings__ = {
-    "level": 5,
-    "default_status": False,
-    "limit_superuser": False,
-    "cmd": ["pve"],
-}
+
 
 pve = on_command("pve", aliases={"vb图", "VB图", "V币图", "v币图"}, priority=5, block=True)
 @pve.handle()

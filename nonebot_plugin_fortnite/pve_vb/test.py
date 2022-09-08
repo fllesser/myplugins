@@ -6,7 +6,7 @@ from io import BytesIO
 import time
 
 
-from utils import BuildImage
+from testutils import BuildImage
 # from utils.message_builder import text
 
 url = "https://freethevbucks.com/timed-missions/"

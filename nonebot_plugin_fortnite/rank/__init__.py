@@ -12,23 +12,16 @@ from PIL import Image, ImageFont, ImageDraw
 from io import BytesIO
 import httpx, re
 
-__zx_plugin_name__ = "堡垒之夜战绩查询"
+__zx_plugin_name__ = "堡垒之夜战绩"
 __plugin_usage__ = """
 usage：
     堡垒之夜战绩查询
     指令：
-        战绩
+        战绩 id
 """.strip()
-__plugin_des__ = "堡垒之夜战绩查询"
+__plugin_type__ = ("堡批专属",)
 __plugin_cmd__ = ["战绩"]
-__plugin_version__ = 0.1
-__plugin_author__ = "YiJiu Chow"
-__plugin_settings__ = {
-    "level": 5,
-    "default_status": True,
-    "limit_superuser": False,
-    "cmd": ["战绩查询"],
-}
+__plugin_des__ = "堡垒之夜战绩查询"
 
 
 api = FortniteAPI(api_key = "f3f4e682-346e-45b1-8323-fe77aaea2a68", run_async = True)
