@@ -9,3 +9,7 @@
   - pve_vb 每日vb图
   - rank 战绩查询
   - daily_shop  每日商城
+
+git config --global credential.helper store
+git remote set-url --add --push origin https://github.com/YiJiuChow/myplugins.git
+git remote set-url --add --push origin https://gitee.com/YiJiuChow/myplugins.git
