@@ -1,10 +1,11 @@
-import random, os
-from services.log import logger
+import random, os, asyncio
+
 from nonebot.adapters.onebot.v11 import Message, PrivateMessageEvent
-from utils.utils import scheduler, get_bot
 from nonebot import on_command
 from nonebot.permission import SUPERUSER
-import asyncio
+
+from services.log import logger
+from utils.utils import scheduler, get_bot
 
 __zx_plugin_name__ = "今日校园自动签到 [Hidden]"
 __plugin_version__ = 0.1

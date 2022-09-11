@@ -1,17 +1,12 @@
 import shlex
 import traceback
+
 from typing import List
 from nonebot import on_command
 from nonebot.matcher import Matcher
 from nonebot.typing import T_Handler, T_RuleChecker, T_State
 from nonebot.params import CommandArg, State
-from nonebot.adapters.onebot.v11 import (
-    Bot,
-    Message,
-    MessageSegment,
-    MessageEvent,
-    GroupMessageEvent,
-)
+from nonebot.adapters.onebot.v11 import Bot, Message, MessageSegment, MessageEvent, GroupMessageEvent
 from nonebot.log import logger
 
 from .data_source import make_image, commands

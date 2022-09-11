@@ -1,5 +1,6 @@
-from models.group_member_info import GroupInfoUser
 from typing import ClassVar, List
+
+from models.group_member_info import GroupInfoUser
 
 class GroupInfoUserByMe(GroupInfoUser):
 

@@ -1,8 +1,9 @@
+from nonebot.plugin import on_command
+
 from utils.utils import scheduler, get_bot
 from utils.manager import group_manager
 from utils.message_builder import image
 from services.log import logger
-from nonebot.plugin import on_command
 
 __zx_plugin_name__ = "堡垒之夜每日商城"
 __plugin_usage__ = """

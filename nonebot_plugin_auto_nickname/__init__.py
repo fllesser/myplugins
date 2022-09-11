@@ -1,6 +1,7 @@
-from random import choice
-from services.log import logger
 import time
+from random import choice
+
+from services.log import logger
 from utils.utils import scheduler, get_bot
 
 
