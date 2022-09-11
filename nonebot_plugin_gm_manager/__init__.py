@@ -1,13 +1,11 @@
-from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message
+from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message, GroupIncreaseNoticeEvent
 from utils.utils import get_message_at, is_number
 from services.log import logger
-from nonebot import on_command
+from nonebot import on_command, on_notice
 from nonebot.params import CommandArg
 from nonebot.permission import SUPERUSER
-import asyncio
 
-from .model import GroupInfoUserByMe
-from .data_source import get_kicked_list
+from .data_source import kick_not_active_member
 
 __zx_plugin_name__ = "禁言/踢人 [Admin]"
 __plugin_usage__ = """
@@ -35,6 +33,7 @@ __plugin_configs__ = {
 banuser = on_command("ban", aliases={"禁"}, priority=5, block=True)
 kickuser = on_command("kick", aliases={"踢"}, priority=5, block=True)
 kugm = on_command("kugm", priority=5, permission=SUPERUSER, block=True)
+gm_increase = on_notice(priority=1, block=False)
 
 @banuser.handle()
 async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
@@ -70,17 +69,21 @@ async def _(bot: Bot, event: GroupMessageEvent):
 
 @kugm.handle()
 async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
-    if not (await bot.get_group_member_info(user_id=bot.self_id, group_id=event.group_id, no_cache=True))["role"] in ["admin", "owner"]:
-        await kugm.finish(message="机器人权限不足")
     msg = arg.extract_plain_text().strip()
     kicked_num = 10
     if is_number(msg) and not (int(msg) < 0 or int(msg) > 30):
         kicked_num = int(msg)
-    message_str = ""
-    for member in await get_kicked_list(bot=bot, group_id=event.group_id, kicked_num=kicked_num):
-        await bot.set_group_kick(group_id=event.group_id, user_id=member["user_id"])
-        await GroupInfoUserByMe.delete_member_info(user_qq=member["user_id"], group_id=event.group_id)
-        logger.info(f"{member} -> kicked")
-        message_str += f"{member['user_id']} {(member['card'] if not member['card'] == '' else member['nickname'])}\n"
-        await asyncio.sleep(1)
-    await kugm.finish(message=f"{message_str}通通被我送走了捏")
+    result = await kick_not_active_member(bot=bot,group_id=event.group_id,kicked_num=kicked_num)
+    await kugm.finish(message=result)
+
+
+@gm_increase.handle()
+async def _(bot: Bot, event: GroupIncreaseNoticeEvent):
+    group_info = await bot.get_group_info(group_id=event.group_id, no_cache=True)
+    if group_info["member_count"] == group_info["max_member_count"]:
+        await bot.send_group_msg(
+            message=f"检测到该群人数已满\n开始踢除不活跃用户\n当前规则:\n1.超过三个月不发言\n2.群活跃等级小于20",
+            group_id=event.group_id)
+        message_str = await kick_not_active_member(bot=bot,group_id=event.group_id,kicked_num=10)
+        await gm_increase.finish(message=message_str)
+       

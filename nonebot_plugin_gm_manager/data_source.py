@@ -1,8 +1,23 @@
-from typing import Dict, List, Any
-from .model import GroupInfoUserByMe
-from services.log import logger
+import time, asyncio
 from nonebot.adapters.onebot.v11 import Bot
-import time
+from typing import Dict, List, Any
+
+from services.log import logger
+
+from .model import GroupInfoUserByMe
+
+
+async def kick_not_active_member(bot: Bot, group_id: int, kicked_num: int) -> str:
+    if not (await bot.get_group_member_info(user_id=bot.self_id, group_id=group_id, no_cache=True))["role"] in ["admin", "owner"]:
+        return "机器人权限不足"
+    message_str = ""
+    for member in await get_kicked_list(bot=bot, group_id=group_id, kicked_num=kicked_num):
+        await bot.set_group_kick(group_id=group_id, user_id=member["user_id"])
+        await GroupInfoUserByMe.delete_member_info(user_qq=member["user_id"], group_id=group_id)
+        logger.info(f"{member} -> kicked")
+        message_str += f"{member['user_id']} {(member['card'] if not member['card'] == '' else member['nickname'])}\n"
+        await asyncio.sleep(1)
+    return f"{message_str}通通被我送走了捏"
 
 
 async def get_kicked_list(bot: Bot, group_id: int, kicked_num: int) -> List[Dict[str, Any]]:
