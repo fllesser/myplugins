@@ -58,8 +58,9 @@ kugm = on_command("kugm", priority=5, permission=SUPERUSER, block=True)
 
 @banuser.handle()
 async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
-    baned_user = get_message_at(event.json())[0]
+    baned_user = get_message_at(event.json())
     if baned_user:
+        baned_user = baned_user[0]
         msg = arg.extract_plain_text().strip()
         ban_time = 600
         if is_number(msg) and not (int(msg) < 0 or int(msg) > 60 * 24 * 29):
@@ -72,8 +73,9 @@ async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
 
 @kickuser.handle()
 async def _(bot: Bot, event: GroupMessageEvent):
-    kicked_user = get_message_at(event.json())[0]
+    kicked_user = get_message_at(event.json())
     if kicked_user:
+        kicked_user = kicked_user[0]
         await bot.set_group_kick(group_id=event.group_id, user_id=kicked_user)
         logger.info(f"kick success group_id = {event.group_id}, user_id = {kicked_user}")
         await kickuser.finish(message=f"{kicked_user} 被我送走了")
