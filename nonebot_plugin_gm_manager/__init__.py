@@ -31,9 +31,10 @@ __plugin_configs__ = {
 
 
 banuser = on_command("ban", aliases={"禁"}, priority=5, block=True)
-kickuser = on_command("kick", aliases={"踢"}, priority=5, block=True)
+kickuser = on_command("kick", aliases={"踢"}, priority=5 , block=True)
 kugm = on_command("kugm", priority=5, permission=SUPERUSER, block=True)
 gm_increase = on_notice(priority=5, block=False)
+
 
 @banuser.handle()
 async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
@@ -80,11 +81,11 @@ async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
 @gm_increase.handle()
 async def _(bot: Bot, event: GroupIncreaseNoticeEvent):
     group_info = await bot.get_group_info(group_id=event.group_id, no_cache=True)
-    logger.info(f"该群当前人数 {group_info['member_count']}")
+    # logger.info(f"该群当前人数 {group_info['member_count']}")
     if group_info["member_count"] == group_info["max_member_count"]:
         await bot.send_group_msg(
             message="检测到该群人数已满\n开始踢除不活跃用户\n当前规则:\n 1.超过三个月不发言\n 2.群活跃等级小于20",
             group_id=event.group_id)
         message_str = await kick_not_active_member(bot=bot,group_id=event.group_id,kicked_num=10)
         await gm_increase.finish(message=message_str)
-       
+
