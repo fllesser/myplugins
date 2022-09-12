@@ -1,3 +1,5 @@
+from email import message
+import re
 import time, asyncio
 from nonebot.adapters.onebot.v11 import Bot
 from typing import Dict, List, Any
@@ -8,10 +10,11 @@ from .model import GroupInfoUserByMe
 
 
 async def kick_not_active_member(bot: Bot, group_id: int, kicked_num: int) -> str:
-    if not (await bot.get_group_member_info(user_id=bot.self_id, group_id=group_id, no_cache=True))["role"] in ["admin", "owner"]:
-        return "机器人权限不足"
+    members = await get_kicked_list(bot=bot, group_id=group_id, kicked_num=kicked_num)
+    if members is None or members == []:
+        return "没有需要清理(即符合设置的规则)的成员, 请修改规则"
     message_str = ""
-    for member in await get_kicked_list(bot=bot, group_id=group_id, kicked_num=kicked_num):
+    for member in members:
         await bot.set_group_kick(group_id=group_id, user_id=member["user_id"])
         await GroupInfoUserByMe.delete_member_info(user_qq=member["user_id"], group_id=group_id)
         logger.info(f"{member} -> kicked")
