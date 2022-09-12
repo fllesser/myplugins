@@ -7,7 +7,7 @@ from nonebot.permission import SUPERUSER
 
 from .data_source import kick_not_active_member
 
-__zx_plugin_name__ = "禁言/踢人 [Admin]"
+__zx_plugin_name__ = "禁言/踢人"
 __plugin_usage__ = """
 usage：
     指令:
@@ -16,18 +16,18 @@ usage：
         kick [at] 踢
         kugm ?(default 10) 踢出不活跃用户 
 """.strip()
-__plugin_version__ = 0.1
-__plugin_author__ = "YiJiuChow"
-__plugin_settings__ = {
-    "admin_level": 5,
-}
-__plugin_configs__ = {
-    "BAN_LEVEL [LEVEL]": {
-        "value": 5,
-        "help": "ban/kick所需要的管理员权限等级",
-        "default_value": 5,
-    }
-}
+__plugin_type__ = ("其他",)
+__plugin_cmd__ = ["ban", "kick", "kugm"]
+__plugin_des__ = "禁言/踢人"
+
+
+permission_filter = on_command(cmd="ban", aliases={"禁", "kick", "踢", "kugm"}, priority=9, block=True)
+
+@permission_filter.handle()
+async def _(bot: Bot, event: GroupMessageEvent):
+    if (await bot.get_group_member_info(user_id=event.user_id, group_id=event.group_id, no_cache=True))["role"] == "member":
+        await bot.set_group_ban(group_id=event.group_id, user_id=event.user_id, duration=60)
+        await permission_filter.finish(message="乱玩管理命令, 禁言一分钟")
 
 
 banuser = on_command("ban", aliases={"禁"}, priority=5, block=True)
