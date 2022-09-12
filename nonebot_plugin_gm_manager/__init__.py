@@ -21,7 +21,7 @@ __plugin_cmd__ = ["ban", "kick", "kugm"]
 __plugin_des__ = "禁/踢"
 
 # 权限过滤
-permission_filter = on_command(cmd="ban", aliases={"禁", "kick", "踢", "kugm"}, priority=1)
+permission_filter = on_command(cmd="ban", aliases={"kick", "kugm"}, priority=1)
 
 @permission_filter.handle()
 async def _(bot: Bot, event: GroupMessageEvent):
@@ -33,8 +33,8 @@ async def _(bot: Bot, event: GroupMessageEvent):
         permission_filter.block = False    
 
 
-banuser = on_command("ban", aliases={"禁"}, priority=5, block=True)
-kickuser = on_command("kick", aliases={"踢"}, priority=5 , block=True)
+banuser = on_command("ban", priority=5, block=True)
+kickuser = on_command("kick", priority=5 , block=True)
 kugm = on_command("kugm", priority=5, permission=SUPERUSER, block=True)
 gm_increase = on_notice(priority=5, block=False)
 
