@@ -8,6 +8,7 @@ from utils.utils import get_message_at, is_number
 from services.log import logger
 
 from .data_source import kick_not_active_member, get_kicked_list
+from .model import GroupInfoUserByMe
 
 __zx_plugin_name__ = "ban/kick/kugm"
 __plugin_usage__ = """
@@ -28,7 +29,9 @@ driver = get_driver()
 async def init_condition(bot: Bot):
     g_list = [913941037, 754044548]
     for g in g_list:
-        await get_kicked_list(bot, g, 1)
+        members = await get_kicked_list(bot=bot, group_id=g, kicked_num=1)
+        logger.info(f"群 {g} query_start_dict 初始化完成 members={members}")
+    logger.info(f"query_start_dict : {GroupInfoUserByMe.query_start_dict}")
 
 # 权限过滤
 permission_filter = on_command(cmd="ban", aliases={"kick", "kugm"}, priority=1)
