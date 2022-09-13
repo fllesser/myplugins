@@ -2,11 +2,12 @@ from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message, GroupIn
 from nonebot import on_command, on_notice
 from nonebot.params import CommandArg
 from nonebot.permission import SUPERUSER
+from nonebot import get_driver
 
 from utils.utils import get_message_at, is_number
 from services.log import logger
 
-from .data_source import kick_not_active_member
+from .data_source import kick_not_active_member, get_kicked_list
 
 __zx_plugin_name__ = "ban/kick/kugm"
 __plugin_usage__ = """
@@ -20,6 +21,14 @@ usage：
 __plugin_type__ = ("其他",)
 __plugin_cmd__ = ["ban", "kick", "kugm"]
 __plugin_des__ = "ban/kick/kugm"
+
+
+driver = get_driver()
+@driver.on_bot_connect
+async def do_something(bot: Bot):
+    g_list = [913941037, 754044548]
+    for g in g_list:
+        await get_kicked_list(bot, g, 1)
 
 # 权限过滤
 permission_filter = on_command(cmd="ban", aliases={"kick", "kugm"}, priority=1)
