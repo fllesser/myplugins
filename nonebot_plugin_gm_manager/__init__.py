@@ -1,14 +1,14 @@
-from tokenize import group
 from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message, GroupIncreaseNoticeEvent
-from utils.utils import get_message_at, is_number
-from services.log import logger
 from nonebot import on_command, on_notice
 from nonebot.params import CommandArg
 from nonebot.permission import SUPERUSER
 
+from utils.utils import get_message_at, is_number
+from services.log import logger
+
 from .data_source import kick_not_active_member
 
-__zx_plugin_name__ = "禁言/踢人"
+__zx_plugin_name__ = "ban/kick/kugm"
 __plugin_usage__ = """
 usage：
     指令:
@@ -19,7 +19,7 @@ usage：
 """.strip()
 __plugin_type__ = ("其他",)
 __plugin_cmd__ = ["ban", "kick", "kugm"]
-__plugin_des__ = "禁/踢"
+__plugin_des__ = "ban/kick/kugm"
 
 # 权限过滤
 permission_filter = on_command(cmd="ban", aliases={"kick", "kugm"}, priority=1)
@@ -35,7 +35,7 @@ async def _(bot: Bot, event: GroupMessageEvent):
     else:
         permission_filter.block = False
 
-# 检测群是否已满, 并清理不活跃用户
+# 检测群是否已满, 清理不活跃用户
 gm_increase = on_notice(priority=5, block=False)
 
 @gm_increase.handle()

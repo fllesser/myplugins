@@ -59,18 +59,4 @@ cp_daily = on_command("tsc", priority=5, permission=SUPERUSER, block=True)
 @cp_daily.handle()
 async def _(event: PrivateMessageEvent):
     await ts()
-
-
-# # 今日校园手动添加任务命令
-# add_cp_daily = on_command("addtsc", priority=5, permission=SUPERUSER, block=True)
-
-# @add_cp_daily.handle()
-# async def _(event: PrivateMessageEvent):
-#     scheduler.remove_job("today_school")
-#     interval_minutes = random.randint(1, 59)
-#     interval_hours = random.randint(7, 9)
-#     scheduler.add_job(ts, "cron", hour=interval_hours, minute=interval_minutes, id='today_school')
-#     logger.info(f"手动添加今日校园定时任务 SUCCESS {interval_hours}时{interval_minutes}分")
-#     await add_cp_daily.finish(message=f"添加今日校园签到任务 {interval_hours}时{interval_minutes}分")
-
         

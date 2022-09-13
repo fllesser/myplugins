@@ -1,5 +1,3 @@
-from email import message
-import re
 import time, asyncio
 from nonebot.adapters.onebot.v11 import Bot
 from typing import Dict, List, Any

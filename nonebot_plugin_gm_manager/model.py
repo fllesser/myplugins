@@ -1,4 +1,4 @@
-from typing import ClassVar, List
+from typing import  List
 
 from models.group_member_info import GroupInfoUser
 
