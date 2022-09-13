@@ -25,7 +25,7 @@ __plugin_des__ = "ban/kick/kugm"
 
 driver = get_driver()
 @driver.on_bot_connect
-async def do_something(bot: Bot):
+async def init_condition(bot: Bot):
     g_list = [913941037, 754044548]
     for g in g_list:
         await get_kicked_list(bot, g, 1)
