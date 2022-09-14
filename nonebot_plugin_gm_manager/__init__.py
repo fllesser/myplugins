@@ -1,4 +1,4 @@
-from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message, GroupIncreaseNoticeEvent
+from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message, GroupIncreaseNoticeEvent, GROUP_ADMIN, GROUP_OWNER
 from nonebot import on_command, on_notice
 from nonebot.params import CommandArg
 from nonebot.permission import SUPERUSER
@@ -25,12 +25,14 @@ __plugin_des__ = "ban/kick/kugm"
 
 
 driver = get_driver()
+
+# websocket连接后 初始化query_start
 @driver.on_bot_connect
 async def init_condition(bot: Bot):
     g_list = [913941037, 754044548]
     for g in g_list:
         members = await get_kicked_list(bot=bot, group_id=g, kicked_num=1)
-        logger.info(f"群 {g} query_start_dict 初始化完成 members={members}")
+        logger.info(f"群 {g} query_start_dict 初始化完成 len(members)={len(members)}")
     logger.info(f"query_start_dict : {GroupInfoUserByMe.query_start_dict}")
 
 # 权限过滤
@@ -39,9 +41,9 @@ permission_filter = on_command(cmd="ban", aliases={"kick", "kugm"}, priority=1)
 @permission_filter.handle()
 async def _(bot: Bot, event: GroupMessageEvent):
     permission_filter.block = True
-    if (await bot.get_group_member_info(user_id=bot.self_id, group_id=event.group_id, no_cache=True))["role"] == "member":
+    if not (GROUP_ADMIN(bot, event) or GROUP_OWNER(bot, event)):
         await permission_filter.finish(message="机器人权限不足")
-    elif (await bot.get_group_member_info(user_id=event.user_id, group_id=event.group_id, no_cache=True))["role"] == "member":
+    elif event.sender.role == "member":
         await bot.set_group_ban(group_id=event.group_id, user_id=event.user_id, duration=60)
         await permission_filter.finish(message="乱玩管理命令, 禁言一分钟")
     else:
@@ -52,11 +54,11 @@ gm_increase = on_notice(priority=5, block=False)
 
 @gm_increase.handle()
 async def _(bot: Bot, event: GroupIncreaseNoticeEvent):
-    if (await bot.get_group_member_info(user_id=bot.self_id, group_id=event.group_id, no_cache=True))["role"] == "member":
+    if not (GROUP_ADMIN(bot, event) or GROUP_OWNER(bot, event)):
         logger.info(f"群: {event.group_id} 机器人权限不足")
         return
     group_info = await bot.get_group_info(group_id=event.group_id, no_cache=True)
-    if group_info["member_count"] == group_info["max_member_count"]:
+    if group_info["member_count"] == group_info["max_member_count"] - 1:
         await bot.send_group_msg(
             message="检测到该群人数已满\n开始踢除不活跃用户\n当前规则:\n 1.超过三个月不发言\n 2.群活跃等级小于20",
             group_id=event.group_id)
@@ -72,7 +74,7 @@ kugm = on_command("kugm", priority=5, permission=SUPERUSER, block=True)
 async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
     baned_user = get_message_at(event.json())
     if baned_user:
-        if not (await bot.get_group_member_info(group_id=event.group_id, user_id=baned_user[0],no_cache=True))["role"] == "member":
+        if not event.sender.role == "member":
             await kickuser.finish(message="机器人权限不足")
         msg = arg.extract_plain_text().strip()
         ban_time = 600
@@ -88,7 +90,7 @@ async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
 async def _(bot: Bot, event: GroupMessageEvent):
     kicked_user = get_message_at(event.json())
     if kicked_user:
-        if not (await bot.get_group_member_info(group_id=event.group_id, user_id=kicked_user[0],no_cache=True))["role"] == "member":
+        if not event.sender.role == "member":
             await kickuser.finish(message="机器人权限不足")
         await bot.set_group_kick(group_id=event.group_id, user_id=kicked_user[0])
         logger.info(f"kick success group_id = {event.group_id}, user_id = {kicked_user}")
@@ -103,7 +105,7 @@ async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
     kicked_num = 10
     if is_number(msg) and not (int(msg) < 0 or int(msg) > 30):
         kicked_num = int(msg)
-    result = await kick_not_active_member(bot=bot,group_id=event.group_id,kicked_num=kicked_num)
+    result = await kick_not_active_member(bot=bot, group_id=event.group_id, kicked_num=kicked_num)
     await kugm.finish(message=result)
 
 

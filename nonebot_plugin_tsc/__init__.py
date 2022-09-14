@@ -12,12 +12,7 @@ __plugin_version__ = 0.1
 __plugin_author__ = "YiJiuChow"
 
 # 默认定时任务
-@scheduler.scheduled_job(
-    "cron",
-    hour=3,
-    minute=10,
-    id='today_school'
-)
+@scheduler.scheduled_job("cron", hour=3, minute=10, id='today_school')
 async def ts(): # 签到函数
     bot = get_bot()
     ts_command = "python3 auto-cpdaily/index.py"
@@ -37,12 +32,7 @@ async def ts(): # 签到函数
         #for superuser in superusers_set:
         await bot.send_group_msg(group_id=774331907, message=Message(f"今日校园签到状态: {str}"))
 
-@scheduler.scheduled_job(
-    "cron",
-    hour=3,
-    minute=5,
-    id='add_today_school_job'
-) 
+@scheduler.scheduled_job("cron", hour=3, minute=5) 
 async def _():
     try:
         scheduler.remove_job("today_school")

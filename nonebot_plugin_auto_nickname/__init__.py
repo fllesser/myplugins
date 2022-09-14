@@ -22,26 +22,19 @@ async def init_gl(bot: Bot):
     gl = [g["group_id"] for g in gl]
     logger.info(f"群列表初始化成功 {gl}")
 
-@scheduler.scheduled_job(
-    "interval",
-    minutes=1
-)
+@scheduler.scheduled_job("interval", minutes=1)
 async def _():
     try:
         bot = get_bot()
         timestr = time.strftime("%a %b %d %H:%M %Y CST", time.localtime())
         for g in gl:
             await bot.set_group_card(group_id=g, user_id=bot.self_id, card=f"大头 {timestr}")
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(1)
         await bot.set_group_card(group_id=774331907, user_id=1626303708, card=choice(lz_list)) 
     except Exception as e:
         logger.error(f"error: {e}")
 
-@scheduler.scheduled_job(
-    "cron",
-    hour=6,
-    minute=0,
-)
+@scheduler.scheduled_job("cron", hour=6, minute=0,)
 async def _():
     try:
         bot = get_bot()
