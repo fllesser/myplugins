@@ -62,7 +62,7 @@ async def _(bot: Bot, event: GroupIncreaseNoticeEvent):
         await bot.send_group_msg(
             message="检测到该群人数已满\n开始踢除不活跃用户\n当前规则:\n 1.超过三个月不发言\n 2.群活跃等级小于20",
             group_id=event.group_id)
-        message_str = await kick_not_active_member(bot=bot,group_id=event.group_id,kicked_num=10)
+        message_str = await kick_not_active_member(bot=bot, group_id=event.group_id, kicked_num=10)
         await gm_increase.finish(message=message_str)
 
 # 手动命令
@@ -74,7 +74,7 @@ kugm = on_command("kugm", priority=5, permission=SUPERUSER, block=True)
 async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
     baned_user = get_message_at(event.json())
     if baned_user:
-        if event.sender.role == "member":
+        if not event.sender.role == "member":
             await kickuser.finish(message="机器人权限不足")
         msg = arg.extract_plain_text().strip()
         ban_time = 600
@@ -90,8 +90,8 @@ async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
 async def _(bot: Bot, event: GroupMessageEvent):
     kicked_user = get_message_at(event.json())
     if kicked_user:
-        if event.sender.role == "member":
-            await kickuser.finish(message="机器人权限不足")
+        if not event.sender.role == "member":
+            await kickuser.finish(message="机器人权限不足{event.sender.role}")
         await bot.set_group_kick(group_id=event.group_id, user_id=kicked_user[0])
         logger.info(f"kick success group_id = {event.group_id}, user_id = {kicked_user}")
         await kickuser.finish(message=f"{kicked_user} 被我送走了")
