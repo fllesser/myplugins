@@ -58,9 +58,9 @@ async def _(bot: Bot, event: GroupIncreaseNoticeEvent):
         logger.info(f"群: {event.group_id} 机器人权限不足")
         return
     group_info = await bot.get_group_info(group_id=event.group_id, no_cache=True)
-    if group_info["member_count"] == group_info["max_member_count"] - 1:
+    if group_info["member_count"] == group_info["max_member_count"]:
         await bot.send_group_msg(
-            message="检测到该群人数已满\n开始踢除不活跃用户\n当前规则:\n 1.超过三个月不发言\n 2.群活跃等级小于20",
+            message="检测到该群人数已满\n开始踢除不活跃用户\n当前规则:\n 1.超过三个月不发言\n 2.群活跃等级小于40",
             group_id=event.group_id)
         message_str = await kick_not_active_member(bot=bot, group_id=event.group_id, kicked_num=10)
         await gm_increase.finish(message=message_str)
