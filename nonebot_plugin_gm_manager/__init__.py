@@ -41,8 +41,6 @@ permission_filter = on_command(cmd="ban", aliases={"kick", "kugm"}, priority=1)
 @permission_filter.handle()
 async def _(bot: Bot, event: GroupMessageEvent):
     permission_filter.block = True
-    user_info = await bot.get_group_member_info(group_id=event.group_id, user_id=event.user_id, no_cache=True)
-    logger.info(f"使用者信息 {user_info}")
     if await(GROUP_ADMIN(bot, event) or GROUP_OWNER(bot, event)):
         await permission_filter.finish(message="机器人权限不足")
     elif event.sender.role == "member":
@@ -62,7 +60,7 @@ async def _(bot: Bot, event: GroupIncreaseNoticeEvent):
     group_info = await bot.get_group_info(group_id=event.group_id, no_cache=True)
     if group_info["member_count"] == group_info["max_member_count"]:
         await bot.send_group_msg(
-            message="检测到该群人数已满\n开始踢除不活跃用户\n当前规则:\n 1.超过三个月不发言\n 2.群活跃等级小于20",
+            message="检测到该群人数已满\n开始踢除不活跃用户\n当前规则:\n 1.超过三个月不发言\n 2.群活跃等级小于20(不太准确)\n 3.没有头衔(发送 sgst 头衔名 即可授予自己头衔)\n注:三条规则同时满足才会被踢",
             group_id=event.group_id)
         message_str = await kick_not_active_member(bot=bot, group_id=event.group_id, kicked_num=10)
         await gm_increase.finish(message=message_str)
