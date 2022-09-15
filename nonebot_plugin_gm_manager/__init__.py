@@ -54,7 +54,7 @@ gm_increase = on_notice(priority=5, block=False)
 
 @gm_increase.handle()
 async def _(bot: Bot, event: GroupIncreaseNoticeEvent):
-    if not await(GROUP_ADMIN(bot, event) or GROUP_OWNER(bot, event)):
+    if await(GROUP_ADMIN(bot, event) or GROUP_OWNER(bot, event)):
         logger.info(f"群: {event.group_id} 机器人权限不足")
         return
     group_info = await bot.get_group_info(group_id=event.group_id, no_cache=True)
