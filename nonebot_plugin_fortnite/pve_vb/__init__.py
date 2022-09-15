@@ -49,4 +49,4 @@ async def _():
             if await group_manager.check_group_task_status(g, 'pve'):
                 await bot.send_group_msg(group_id=g, message=image(IMAGE_PATH / "fn_stw.png")) 
     except Exception as e:
-        logger.error("PVE vb图更新错误 {e}")
+        logger.error(f"PVE vb图更新错误 {e}")
