@@ -41,8 +41,8 @@ permission_filter = on_command(cmd="ban", aliases={"kick", "kugm"}, priority=1)
 @permission_filter.handle()
 async def _(bot: Bot, event: GroupMessageEvent):
     permission_filter.block = True
-    bot_info = await bot.get_group_member_info(group_id=event.group_id, user_id=bot.self_id, no_cache=True)
-    logger.info(f"机器人信息 {bot_info}")
+    user_info = await bot.get_group_member_info(group_id=event.group_id, user_id=event.user_id, no_cache=True)
+    logger.info(f"使用者信息 {user_info}")
     if await(GROUP_ADMIN(bot, event) or GROUP_OWNER(bot, event)):
         await permission_filter.finish(message="机器人权限不足")
     elif event.sender.role == "member":
