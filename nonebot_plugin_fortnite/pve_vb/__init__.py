@@ -10,7 +10,7 @@ from utils.manager import group_manager
 
 from .data_source import update_daily_vb
 
-__zx_plugin_name__ = "堡垒之夜每日vb图"
+__zx_plugin_name__ = "vb图"
 __plugin_usage__ = """
 usage：
     堡垒之夜PVE

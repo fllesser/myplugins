@@ -12,7 +12,7 @@ from PIL import Image, ImageFont, ImageDraw
 from io import BytesIO
 import httpx, re
 
-__zx_plugin_name__ = "堡垒之夜战绩"
+__zx_plugin_name__ = "战绩"
 __plugin_usage__ = """
 usage：
     堡垒之夜战绩查询

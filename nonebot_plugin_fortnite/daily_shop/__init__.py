@@ -5,7 +5,7 @@ from utils.manager import group_manager
 from utils.message_builder import image
 from services.log import logger
 
-__zx_plugin_name__ = "堡垒之夜每日商城"
+__zx_plugin_name__ = "商城"
 __plugin_usage__ = """
 usage：
     堡垒之夜每日商城
