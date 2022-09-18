@@ -36,7 +36,7 @@ async def update_daily_vb():
                 await img.atext(pos=(130, Y-3), text= item.span.text, fill=(255, 255, 255))
                 Y += 30
     if Y == 30:
-        img.font = ImageFont.truetype(str(FONT_PATH / "msyh.ttf"), 30)
-        await img.atext(text="今天没有vb图捏", pos=(0, 0), center_type="center", fill=(255, 255, 255))
+        img.font = ImageFont.truetype(str(FONT_PATH / "HWXingKai.ttf"), 30)
+        await img.atext(text="今天没有vb图捏", pos=(0, 80), center_type="by_width", fill=(255, 255, 255))
     img.save(IMAGE_PATH / "fn_stw.png")
     
