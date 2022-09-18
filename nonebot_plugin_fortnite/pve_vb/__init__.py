@@ -28,7 +28,7 @@ pve = on_command("pve", aliases={"vb图", "VB图", "V币图", "v币图"}, priori
 async def _():
     await pve.finish(message=image(IMAGE_PATH / "fn_stw.png"))
 
-update_pve = on_command("u pve", priority=5, block=True, permission=SUPERUSER)
+update_pve = on_command("更新vb图", priority=5, block=True, permission=SUPERUSER)
 @update_pve.handle()
 async def _(bot: Bot, event: GroupMessageEvent):
     await update_daily_vb()
@@ -40,13 +40,16 @@ async def _(bot: Bot, event: GroupMessageEvent):
     minute=1,
 )
 async def _():
+    msg = None
     try:
         await update_daily_vb()
-        bot = get_bot()
-        gl = await bot.get_group_list()
-        gl = [g["group_id"] for g in gl]
-        for g in gl:
-            if await group_manager.check_group_task_status(g, 'pve'):
-                await bot.send_group_msg(group_id=g, message=image(IMAGE_PATH / "fn_stw.png")) 
+        msg = image(IMAGE_PATH / "fn_stw.png")
     except Exception as e:
         logger.error(f"PVE vb图更新错误 {e}")
+        msg = f"vb图定时更新失败, 错误信息{e}, 请手动更新"
+    bot = get_bot()
+    gl = await bot.get_group_list()
+    gl = [g["group_id"] for g in gl]
+    for g in gl:
+        if await group_manager.check_group_task_status(g, 'pve'):
+            await bot.send_group_msg(group_id=g, message=msg) 
