@@ -16,7 +16,7 @@ async def kick_not_active_member(bot: Bot, group_id: int, kicked_num: int) -> st
         await bot.set_group_kick(group_id=group_id, user_id=member["user_id"])
         await GroupInfoUserByMe.delete_member_info(user_qq=member["user_id"], group_id=group_id)
         logger.info(f"{member} -> kicked")
-        message_str += f"{member['user_id']} {(member['card'] if not member['card'] == '' else member['nickname'])}\n"
+        message_str += f"{hid_num_4mid(member['user_id'])} {(member['card'] if not member['card'] == '' else member['nickname'])}\n"
         await asyncio.sleep(1)
     return f"{message_str}通通被我送走了捏"
 
@@ -50,3 +50,7 @@ async def get_kicked_list(bot: Bot, group_id: int, kicked_num: int) -> List[Dict
         logger.info(f"当前查询第{i}页, 已匹配的待踢人数{len(members)}")
         if len(members) == 0:
             GroupInfoUserByMe.query_start_dict[str(group_id)] += 1
+
+def hid_num_4mid(num: int) -> str:
+    hidden_qq = str(num)
+    return hidden_qq.replace(hidden_qq[3 : -3], "****")
