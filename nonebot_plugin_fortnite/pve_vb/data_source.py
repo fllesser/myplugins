@@ -12,7 +12,7 @@ from utils.image_utils import BuildImage
 from configs.path_config import IMAGE_PATH
 
 
-async def update_daily_vb():
+async def update_daily_vb() -> str:
     url = "https://freethevbucks.com/timed-missions/"
     html_content = httpx.get(url).content
     soup = BeautifulSoup(html_content, "lxml")
@@ -42,3 +42,4 @@ async def update_daily_vb():
         img.font = ImageFont.truetype(str(FONT_PATH / "HWXingKai.ttf"), 30)
         await img.atext(pos=(0, 80), text="今天没有vb图捏", center_type="by_width", fill=(255, 255, 255))
     img.save(IMAGE_PATH / "fn_stw.png")
+    return "fn_stw.png"

@@ -32,7 +32,7 @@ update_pve = on_command("更新vb图", priority=5, block=True, permission=SUPERU
 @update_pve.handle()
 async def _(bot: Bot, event: GroupMessageEvent):
     await update_daily_vb()
-    await bot.send_group_msg(group_id=event.group_id,message="手动更新 STW(PVE) vb图成功")
+    await bot.send_group_msg(group_id=event.group_id, message="手动更新 STW(PVE) vb图成功")
 
 @scheduler.scheduled_job(
     "cron",
@@ -42,8 +42,8 @@ async def _(bot: Bot, event: GroupMessageEvent):
 async def _():
     msg = None
     try:
-        await update_daily_vb()
-        msg = image(IMAGE_PATH / "fn_stw.png")
+        img_name = await update_daily_vb()
+        msg = image(IMAGE_PATH / img_name)
     except Exception as e:
         logger.error(f"PVE vb图更新错误 {e}")
         msg = f"vb图定时更新失败, 错误信息{e}, 请手动更新"
