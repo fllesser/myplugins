@@ -52,5 +52,5 @@ async def get_kicked_list(bot: Bot, group_id: int, kicked_num: int) -> List[Dict
             GroupInfoUserByMe.query_start_dict[str(group_id)] += 1
 
 def hid_num_4mid(num: int) -> str:
-    hidden_qq = str(num)
-    return hidden_qq.replace(hidden_qq[3 : -3], "****")
+    num = str(num)
+    return num.replace(num[3 : -3], "****")
