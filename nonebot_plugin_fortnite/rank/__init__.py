@@ -35,7 +35,8 @@ season_stat = on_command("战绩", block=True)
 async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     nickname = args.extract_plain_text()
     if nickname is None or nickname == '':
-        card = (await bot.get_group_member_info(user_id=event.user_id, group_id=event.group_id, no_cache=True))["card"]
+        card = event.sender.card 
+        # (await bot.get_group_member_info(user_id=event.user_id, group_id=event.group_id, no_cache=True))["card"]
         if card is not None and card[0:3].casefold() in ["id:", "id：", "id ",]:
             nickname = card[3:len(card)] # 昵称替换为群名片id
         else:
@@ -53,8 +54,8 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
             result = "战绩未公开"
         elif "exist" in result:
             result = "用户不存在"
-        elif "play any match" in result:
-            result = "该玩家该赛季没有进行过任何对局"
+        elif "match" in result:
+            result = "该玩家当前赛季没有进行过任何对局"
         await season_stat.finish(message=result)
     logger.info("战绩查询成功")
     if result is not None:
@@ -68,7 +69,7 @@ lifetime_stat = on_command("生涯战绩", block=True)
 async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     nickname = args.extract_plain_text()
     if nickname is None or nickname == '':
-        card = (await bot.get_group_member_info(user_id=event.user_id, group_id=event.group_id, no_cache=True))["card"]
+        card = event.sender.card 
         if card is not None and card[0:3].casefold() in ["id:", "id：", "id ",]:
             nickname = card[3:len(card)] # 昵称替换为群名片id
         else:
@@ -86,7 +87,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
             result = "战绩未公开"
         elif "exist" in result:
             result = "用户不存在"
-        elif "play any match" in result:
+        elif "match" in result:
             result = "该玩家没有进行过任何对局"
         await lifetime_stat.finish(message=result)
     logger.info("战绩查询成功")

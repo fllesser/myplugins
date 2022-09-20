@@ -23,16 +23,16 @@ __plugin_des__ = "STW(PVE) 每日VB图"
 __plugin_task__ = {"pve":"堡垒之夜PVE推送"}
 
 
-pve = on_command("pve", aliases={"vb图", "VB图", "V币图", "v币图"}, priority=5, block=True)
+pve = on_command("pve", aliases={"vb图", "VB图", "V币图", "v币图"}, block=True)
 @pve.handle()
 async def _():
     await pve.finish(message=image(IMAGE_PATH / "fn_stw.png"))
 
-update_pve = on_command("更新vb图", priority=5, block=True, permission=SUPERUSER)
+update_pve = on_command("更新vb图", block=True, permission=SUPERUSER)
 @update_pve.handle()
 async def _(bot: Bot, event: GroupMessageEvent):
-    await update_daily_vb()
-    await bot.send_group_msg(group_id=event.group_id, message="手动更新 STW(PVE) vb图成功")
+    img_name = await update_daily_vb()
+    await update_pve.finish(message="手动更新 STW(PVE) vb图成功" + image(IMAGE_PATH / img_name))
 
 @scheduler.scheduled_job(
     "cron",
