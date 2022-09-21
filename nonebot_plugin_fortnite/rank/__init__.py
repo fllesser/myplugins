@@ -7,10 +7,10 @@ from utils.image_utils import pic2b64
 from configs.path_config import FONT_PATH
 from services.log import logger
 
-from fortnite_api import StatsImageType, FortniteAPI, TimeWindow
+from fortnite_api import StatsImageType, FortniteAPI, TimeWindow, BrPlayerStats
 from PIL import Image, ImageFont, ImageDraw
 from io import BytesIO
-import httpx, re
+import httpx, re, json
 
 __zx_plugin_name__ = "战绩"
 __plugin_usage__ = """
@@ -36,11 +36,11 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     nickname = args.extract_plain_text()
     if nickname is None or nickname == '':
         card = event.sender.card 
-        # (await bot.get_group_member_info(user_id=event.user_id, group_id=event.group_id, no_cache=True))["card"]
         if card is not None and card[0:3].casefold() in ["id:", "id：", "id ",]:
             nickname = card[3:len(card)] # 昵称替换为群名片id
         else:
-            await season_stat.finish(message="群昵称(名片)设置为\n['id:', 'id：', 'id ']三选一(不区分大小写)\n加上你的游戏昵称发送 战绩 可快速查询当前赛季战绩")
+            await season_stat.finish(message=
+            "群昵称(名片)设置为\n['id:', 'id：', 'id ']三选一(不区分大小写)\n加上你的游戏昵称发送 战绩 可快速查询当前赛季战绩")
     try:
         playerstats = await api.stats.fetch_by_name(nickname, time_window=TimeWindow.SEASON, image=StatsImageType.ALL)
         url = playerstats.image_url
@@ -73,7 +73,8 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
         if card is not None and card[0:3].casefold() in ["id:", "id：", "id ",]:
             nickname = card[3:len(card)] # 昵称替换为群名片id
         else:
-            await lifetime_stat.finish(message="群昵称(名片)设置为\n['id:', 'id：', 'id ']三选一(不区分大小写)\n加上你的游戏昵称发送 生涯战绩 可快速查询生涯战绩")
+            await lifetime_stat.finish(message=
+            "群昵称(名片)设置为\n['id:', 'id：', 'id ']三选一(不区分大小写)\n加上你的游戏昵称发送 生涯战绩 可快速查询生涯战绩")
     try:
         playerstats = await api.stats.fetch_by_name(nickname, image=StatsImageType.ALL)
         url = playerstats.image_url
@@ -113,3 +114,9 @@ def write_chinese_nickname(url: str, nickname: str):
     ttfont = ImageFont.truetype(str(FONT_PATH / font), font_size)
     draw.text((X, 150), f'{nickname}', fill = "#fafafa", font=ttfont)
     return im
+
+# def battle_level_top(playerstats: BrPlayerStats):
+#     # 季卡等级
+#     level = playerstats.battle_pass.level
+#     with open("level.json", mode='a+') as f:
+        
