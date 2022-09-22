@@ -40,7 +40,7 @@ driver = get_driver()
 @driver.on_bot_connect
 async def init_bpr():
     if not os.path.exists(file_path):
-        os.popen("echo '{}' > bpr.json ")
+        os.popen("echo '{}' > bpr.json")
     with open(file_path, mode='r') as jr:
         # battle_pass_top # dict
         bpr = json.load(jr) 
