@@ -45,7 +45,7 @@ async def init_bpr():
     with open(file_path, mode='r') as jr:
         # battle_pass_top # dict
         bpr = json.load(jr) 
-        logger.info(f"battle pass ranking 初始化完成{len(bpr)}")
+        logger.info(f"battle pass ranking 初始化完成")
 
 # bot关机后, 写入数据
 @driver.on_shutdown
@@ -137,7 +137,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     sorted_bpr = sorted(bpr.items(), key = lambda item:item[1], reverse=True)
     # 取出top_num个数据
     sorted_bpr = sorted_bpr[0: top_num]
-    bpr_str = "\n".join(f"{sorted_bpr.index(i)+1} {i[0]} {i[1]}" for i in sorted_bpr)
+    bpr_str = "\n".join(f"top{sorted_bpr.index(i)+1} id:{i[0]} level:{i[1]}" for i in sorted_bpr)
     await battle_pass_ranking.finish(message=bpr_str)
         
 
