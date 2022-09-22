@@ -117,6 +117,7 @@ def write_chinese_nickname(url: str, nickname: str):
 
 # def battle_level_top(playerstats: BrPlayerStats):
 #     # 季卡等级
-#     level = playerstats.battle_pass.level
 #     with open("level.json", mode='a+') as f:
+#         if f.get(f"{playerstats.user.name}") is None:
+#             f.write(f"{playerstats.user.name}:{playerstats.battle_pass.level}")
         
