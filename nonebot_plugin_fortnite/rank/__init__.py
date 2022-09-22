@@ -40,18 +40,18 @@ driver = get_driver()
 @driver.on_bot_connect
 async def init_bpr():
     if not os.path.exists(file_path):
-        os.popen("echo '{}' > bpr.json")
+        os.system("echo '{}' > bpr.json")
     with open(file_path, mode='r') as jr:
         # battle_pass_top # dict
         bpr = json.load(jr) 
-        logger.info(f"battle pass ranking 初始化完成, 写入玩家数{len(bpr)}")
+        logger.info(f"battle pass ranking 初始化完成")
 
 # bot关机后, 写入数据
 @driver.on_shutdown
 async def write_bpr_json():
     with open(file_path, mode='w+') as jw:
         jw.write(json.dumps(bpr, indent=4, ensure_ascii=False))
-        logger.info(f"bot关机 battle pass ranking 数据写入完成, 写入玩家数{len(bpr)}")
+        logger.info(f"bot关机 battle pass ranking 数据写入完成")
 
 
 season_stat = on_command("战绩", block=True)
