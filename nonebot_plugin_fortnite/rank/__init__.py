@@ -1,3 +1,4 @@
+from socket import BTPROTO_RFCOMM
 from nonebot import get_driver
 from nonebot.params import CommandArg
 from nonebot.plugin import on_command
@@ -31,7 +32,7 @@ __plugin_des__ = "堡垒之夜战绩查询"
 
 
 api = FortniteAPI(api_key = "f3f4e682-346e-45b1-8323-fe77aaea2a68", run_async = True)
-bpr = None # dict
+bpr = {} # dict
 file_path = "bpr.json"
 
 driver = get_driver()
@@ -44,7 +45,7 @@ async def init_bpr():
     with open(file_path, mode='r') as jr:
         # battle_pass_top # dict
         bpr = json.load(jr) 
-        logger.info(f"battle pass ranking 初始化完成")
+        logger.info(f"battle pass ranking 初始化完成{len(bpr)}")
 
 # bot关机后, 写入数据
 @driver.on_shutdown
