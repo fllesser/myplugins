@@ -100,8 +100,8 @@ async def _(bot: Bot, event: GroupMessageEvent):
         await kickuser.finish(message="没有@要踢的人")
 
 @kugm.handle()
-async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
-    msg = arg.extract_plain_text().strip()
+async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
+    msg = args.extract_plain_text().strip()
     kicked_num = 10
     if is_number(msg) and not (int(msg) < 0 or int(msg) > 30):
         kicked_num = int(msg)
