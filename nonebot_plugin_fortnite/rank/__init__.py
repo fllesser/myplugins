@@ -160,8 +160,12 @@ async def update_level(stat: BrPlayerStats, nickname: str):
 @scheduler.scheduled_job('interval', hours=3)
 async def _():
     for nickname in bpr:
-        stat = await api.stats.fetch_by_name(nickname, time_window=TimeWindow.SEASON, image=StatsImageType.ALL)
-        await update_level(stat, nickname)
+        try:
+            stat = await api.stats.fetch_by_name(nickname, image=StatsImageType.ALL)
+        except:
+            del bpr[nickname]
+            continue
+        await update_level(stat, nickname)              
     with open(file_path, mode='w+') as jw:
         jw.write(json.dumps(bpr, indent=4, ensure_ascii=False))
         logger.info("季卡等级更新完毕")
