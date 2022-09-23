@@ -1,12 +1,12 @@
-from socket import BTPROTO_RFCOMM
-from nonebot import get_driver
+from typing import List
+from nonebot import get_driver, require
 from nonebot.params import CommandArg
 from nonebot.plugin import on_command
 from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message
 
 from utils.message_builder import image
 from utils.image_utils import pic2b64
-from utils.utils import is_number
+from utils.utils import get_bot, is_number, scheduler
 from configs.path_config import FONT_PATH
 from services.log import logger
 
@@ -40,20 +40,12 @@ driver = get_driver()
 # websocket连接后 初始化battle_pass_top # dict
 @driver.on_bot_connect
 async def init_bpr():
-    if not os.path.exists(file_path):
-        os.system("echo '{}' > bpr.json")
+    # if not os.path.exists(file_path):
+    #     os.system("echo '{}' > bpr.json")
     with open(file_path, mode='r') as jr:
         # battle_pass_top # dict
         bpr = json.load(jr) 
         logger.info(f"battle pass ranking 初始化完成")
-
-# bot关机后, 写入数据
-@driver.on_shutdown
-async def write_bpr_json():
-    with open(file_path, mode='w+') as jw:
-        jw.write(json.dumps(bpr, indent=4, ensure_ascii=False))
-        logger.info(f"bot关机 battle pass ranking 数据写入完成")
-
 
 season_stat = on_command("战绩", block=True)
 @season_stat.handle()
@@ -68,7 +60,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
             "群昵称(名片)设置为\n['id:', 'id：', 'id ']三选一(不区分大小写)\n加上你的游戏昵称发送 战绩 可快速查询当前赛季战绩")
     try:
         playerstats = await api.stats.fetch_by_name(nickname, time_window=TimeWindow.SEASON, image=StatsImageType.ALL)
-        update_level(playerstats, nickname)
+        await update_level(playerstats, nickname)
         url = playerstats.image_url
         result = None
         # 匹配带中文昵称
@@ -103,7 +95,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
             "群昵称(名片)设置为\n['id:', 'id：', 'id ']三选一(不区分大小写)\n加上你的游戏昵称发送 生涯战绩 可快速查询生涯战绩")
     try:
         playerstats = await api.stats.fetch_by_name(nickname, image=StatsImageType.ALL)
-        update_level(playerstats, nickname)
+        await update_level(playerstats, nickname)
         url = playerstats.image_url
         result = None
         # 匹配带中文昵称
@@ -158,10 +150,18 @@ def write_chinese_nickname(url: str, nickname: str):
     return im
 
 # 更新季卡等级
-def update_level(stat: BrPlayerStats, nickname: str):
+async def update_level(stat: BrPlayerStats, nickname: str):
     cache_level = bpr.get(nickname)
     if cache_level is None or cache_level != stat.battle_pass.level:
         bpr[nickname] = stat.battle_pass.level
 
 
-        
+# 定时更新季卡等级, 每3小时更新一次
+@scheduler.scheduled_job('interval', hours=3)
+async def _():
+    for nickname in bpr:
+        stat = await api.stats.fetch_by_name(nickname, time_window=TimeWindow.SEASON, image=StatsImageType.ALL)
+        await update_level(stat, nickname)
+    with open(file_path, mode='w+') as jw:
+        jw.write(json.dumps(bpr, indent=4, ensure_ascii=False))
+        logger.info("季卡等级更新完毕")
