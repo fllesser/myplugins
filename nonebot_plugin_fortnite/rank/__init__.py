@@ -1,5 +1,5 @@
 from typing import List
-from nonebot import get_driver, require
+from nonebot import require
 from nonebot.params import CommandArg
 from nonebot.plugin import on_command
 from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message
@@ -37,17 +37,21 @@ api = FortniteAPI(api_key = "f3f4e682-346e-45b1-8323-fe77aaea2a68", run_async = 
 bpr = {} # dict
 file_path = "bpr.json"
 
-driver = get_driver()
+with open(file_path, mode='r') as jr:
+    # battle_pass_top # dict
+    bpr = json.load(jr) 
 
-# websocket连接后 初始化battle_pass_top # dict
-@driver.on_bot_connect
-async def init_bpr():
-    # if not os.path.exists(file_path):
-    #     os.system("echo '{}' > bpr.json")
-    with open(file_path, mode='r') as jr:
-        # battle_pass_top # dict
-        bpr = json.load(jr) 
-        logger.info(f"battle pass ranking 初始化完成")
+# driver = get_driver()
+
+# # websocket连接后 初始化battle_pass_top # dict
+# @driver.on_bot_connect
+# async def init_bpr():
+#     # if not os.path.exists(file_path):
+#     #     os.system("echo '{}' > bpr.json")
+#     with open(file_path, mode='r') as jr:
+#         # battle_pass_top # dict
+#         bpr = json.load(jr) 
+#         logger.info(f"battle pass ranking 初始化完成")
 
 season_stat = on_command("战绩", block=True)
 @season_stat.handle()
@@ -128,7 +132,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     if is_number(msg) and (int(msg) >= 3 or int(msg) <= 50):
         top_num = int(msg)
     # 排序, 按照等级(value)排序, reverse 倒序, 返回一个List[tuple]
-    sorted_bpr = sorted(bpr.items(), key = lambda item:item[1], reverse=True)
+    sorted_bpr = sorted(bpr.items(), key = lambda item:item[1])
     # 取出top_num个数据
     sorted_bpr = sorted_bpr[0: top_num]
     # bpr_str = "\n".join(f"top{sorted_bpr.index(i)+1} id:{i[0]} level:{i[1]}" for i in sorted_bpr)
