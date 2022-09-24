@@ -15,7 +15,7 @@ from fortnite_api import StatsImageType, FortniteAPI, TimeWindow, BrPlayerStats
 from PIL import Image, ImageFont, ImageDraw
 from io import BytesIO
 
-import httpx, re, json, os
+import httpx, re, json, os, asyncio
 
 __zx_plugin_name__ = "战绩"
 __plugin_usage__ = """
@@ -135,8 +135,11 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     # await battle_pass_ranking.finish(message=bpr_str)
     nn_list = [i[0] for i in sorted_bpr]
     level_list = [i[1] for i in sorted_bpr]
-    im = _init_rank_graph("季卡等级排行", nn_list, level_list)
-    await battle_pass_ranking.finish(message=im)
+    # im =  _init_rank_graph("季卡等级排行", nn_list, level_list)
+    im =  await asyncio.get_event_loop().run_in_executor(
+        None, _init_rank_graph, "季卡等级排行", nn_list, level_list
+    )
+    await battle_pass_ranking.finish(message=image(b64=im.pic2bs4()))
         
 
 def write_chinese_nickname(url: str, nickname: str):
