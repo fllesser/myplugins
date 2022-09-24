@@ -1,12 +1,11 @@
 from typing import List
-from nonebot import require
 from nonebot.params import CommandArg
 from nonebot.plugin import on_command
 from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message
 
 from utils.message_builder import image
 from utils.image_utils import pic2b64
-from utils.utils import get_bot, is_number, scheduler
+from utils.utils import is_number, scheduler
 from utils.data_utils import _init_rank_graph
 from configs.path_config import FONT_PATH
 from services.log import logger
@@ -15,7 +14,7 @@ from fortnite_api import StatsImageType, FortniteAPI, TimeWindow, BrPlayerStats
 from PIL import Image, ImageFont, ImageDraw
 from io import BytesIO
 
-import httpx, re, json, os, asyncio
+import httpx, re, json, asyncio
 
 __zx_plugin_name__ = "战绩"
 __plugin_usage__ = """
@@ -40,18 +39,6 @@ file_path = "bpr.json"
 with open(file_path, mode='r') as jr:
     # battle_pass_top # dict
     bpr = json.load(jr) 
-
-# driver = get_driver()
-
-# # websocket连接后 初始化battle_pass_top # dict
-# @driver.on_bot_connect
-# async def init_bpr():
-#     # if not os.path.exists(file_path):
-#     #     os.system("echo '{}' > bpr.json")
-#     with open(file_path, mode='r') as jr:
-#         # battle_pass_top # dict
-#         bpr = json.load(jr) 
-#         logger.info(f"battle pass ranking 初始化完成")
 
 season_stat = on_command("战绩", block=True)
 @season_stat.handle()
@@ -133,6 +120,8 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
         top_num = int(msg)
     # 排序, 按照等级(value)排序, reverse 倒序, 返回一个List[tuple]
     sorted_bpr = sorted(bpr.items(), key = lambda item:item[1])
+    if top_num > len(sorted_bpr):
+        top_num = len(sorted_bpr)
     # 取出top_num个数据
     sorted_bpr = sorted_bpr[len(sorted_bpr)-top_num: len(sorted_bpr)]
     # bpr_str = "\n".join(f"top{sorted_bpr.index(i)+1} id:{i[0]} level:{i[1]}" for i in sorted_bpr)
@@ -143,7 +132,6 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     )
     await battle_pass_ranking.finish(message=image(b64=im.pic2bs4()))
         
-
 def write_chinese_nickname(url: str, nickname: str):
     response = httpx.get(url)
     im = Image.open(BytesIO(response.content))
@@ -167,14 +155,16 @@ async def update_level(stat: BrPlayerStats, nickname: str):
         bpr[nickname] = stat.battle_pass.level
 
 
-# 定时更新季卡等级, 每3小时更新一次
-@scheduler.scheduled_job('interval', hours=3)
+# 定时更新季卡等级, 每2小时更新一次
+@scheduler.scheduled_job('interval', hours=2)
 async def _():
     for nickname in bpr:
         try:
             stat = await api.stats.fetch_by_name(nickname, image=StatsImageType.ALL)
             await update_level(stat, nickname)  
-        except:
+        except Exception as e:
+            if "timed out" in str(e):
+                continue
             del bpr[nickname]       
     with open(file_path, mode='w+') as jw:
         jw.write(json.dumps(bpr, indent=4, ensure_ascii=False))
