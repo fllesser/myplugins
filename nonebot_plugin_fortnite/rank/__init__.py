@@ -134,7 +134,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     # 排序, 按照等级(value)排序, reverse 倒序, 返回一个List[tuple]
     sorted_bpr = sorted(bpr.items(), key = lambda item:item[1])
     # 取出top_num个数据
-    sorted_bpr = sorted_bpr[len(sorted_bpr)-top_num-1: len(sorted_bpr)-1]
+    sorted_bpr = sorted_bpr[len(sorted_bpr)-top_num: len(sorted_bpr)]
     # bpr_str = "\n".join(f"top{sorted_bpr.index(i)+1} id:{i[0]} level:{i[1]}" for i in sorted_bpr)
     nn_list = [i[0] for i in sorted_bpr]
     level_list = [i[1] for i in sorted_bpr]
