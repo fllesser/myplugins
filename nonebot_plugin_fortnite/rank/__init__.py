@@ -128,20 +128,18 @@ battle_pass_ranking = on_command("bpr", aliases={"季卡排行", "季卡等级�
 @battle_pass_ranking.handle()
 async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     msg = args.extract_plain_text().strip()
-    top_num = 5 # 排行数, 默认为5
+    top_num = 10 # 排行数, 默认为10
     if is_number(msg) and (int(msg) >= 3 or int(msg) <= 50):
         top_num = int(msg)
     # 排序, 按照等级(value)排序, reverse 倒序, 返回一个List[tuple]
-    sorted_bpr = sorted(bpr.items(), key = lambda item:item[1])
+    sorted_bpr = sorted(bpr.items(), key = lambda item:item[1], reverse=True)
     # 取出top_num个数据
     sorted_bpr = sorted_bpr[0: top_num]
     # bpr_str = "\n".join(f"top{sorted_bpr.index(i)+1} id:{i[0]} level:{i[1]}" for i in sorted_bpr)
-    # await battle_pass_ranking.finish(message=bpr_str)
-    nn_list = [i[0] for i in sorted_bpr]
-    level_list = [i[1] for i in sorted_bpr]
-    # im =  _init_rank_graph("季卡等级排行", nn_list, level_list)
+    nn_list = [i[0] for i in sorted_bpr].reverse()
+    level_list = [i[1] for i in sorted_bpr].reverse()
     im =  await asyncio.get_event_loop().run_in_executor(
-        None, _init_rank_graph, "季卡等级排行", nn_list, level_list
+        None, _init_rank_graph, "季卡等级排行(查询战绩可收录id)", nn_list, level_list
     )
     await battle_pass_ranking.finish(message=image(b64=im.pic2bs4()))
         
