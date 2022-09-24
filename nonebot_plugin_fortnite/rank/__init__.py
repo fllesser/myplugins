@@ -55,7 +55,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
         playerstats = await api.stats.fetch_by_name(nickname, time_window=TimeWindow.SEASON, image=StatsImageType.ALL)
         await update_level(playerstats, nickname)
         url = playerstats.image_url
-        result = None
+        # result = None
         # 匹配带中文昵称
         if re.search(r'[\u2E80-\u9FFF]', nickname, flags=0):
             result = write_chinese_nickname(url=url, nickname=nickname)
@@ -90,7 +90,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
         playerstats = await api.stats.fetch_by_name(nickname, image=StatsImageType.ALL)
         await update_level(playerstats, nickname)
         url = playerstats.image_url
-        result = None
+        # result = None
         # 匹配带中文昵称
         if re.search(r'[\u2E80-\u9FFF]', nickname, flags=0):
             result = write_chinese_nickname(url=url, nickname=nickname)
@@ -127,7 +127,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     # bpr_str = "\n".join(f"top{sorted_bpr.index(i)+1} id:{i[0]} level:{i[1]}" for i in sorted_bpr)
     nn_list = [i[0] for i in sorted_bpr]
     level_list = [i[1] for i in sorted_bpr]
-    im =  await asyncio.get_event_loop().run_in_executor(
+    im = await asyncio.get_event_loop().run_in_executor(
         None, _init_rank_graph, "季卡等级排行(查询战绩可收录id)", nn_list, level_list
     )
     await battle_pass_ranking.finish(message=image(b64=im.pic2bs4()))

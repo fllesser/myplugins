@@ -40,7 +40,7 @@ async def _(bot: Bot, event: GroupMessageEvent):
     minute=1,
 )
 async def _():
-    msg = None
+    # msg = None
     try:
         img_name = await update_daily_vb()
         msg = image(IMAGE_PATH / img_name)
