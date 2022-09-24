@@ -7,12 +7,14 @@ from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message
 from utils.message_builder import image
 from utils.image_utils import pic2b64
 from utils.utils import get_bot, is_number, scheduler
+from utils.data_utils import _init_rank_graph
 from configs.path_config import FONT_PATH
 from services.log import logger
 
 from fortnite_api import StatsImageType, FortniteAPI, TimeWindow, BrPlayerStats
 from PIL import Image, ImageFont, ImageDraw
 from io import BytesIO
+
 import httpx, re, json, os
 
 __zx_plugin_name__ = "战绩"
@@ -129,8 +131,12 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     sorted_bpr = sorted(bpr.items(), key = lambda item:item[1], reverse=True)
     # 取出top_num个数据
     sorted_bpr = sorted_bpr[0: top_num]
-    bpr_str = "\n".join(f"top{sorted_bpr.index(i)+1} id:{i[0]} level:{i[1]}" for i in sorted_bpr)
-    await battle_pass_ranking.finish(message=bpr_str)
+    # bpr_str = "\n".join(f"top{sorted_bpr.index(i)+1} id:{i[0]} level:{i[1]}" for i in sorted_bpr)
+    # await battle_pass_ranking.finish(message=bpr_str)
+    nn_list = [i[0] for i in sorted_bpr]
+    level_list = [i[1] for i in sorted_bpr]
+    im = _init_rank_graph("季卡等级排行", nn_list, level_list)
+    await battle_pass_ranking.finish(message=im)
         
 
 def write_chinese_nickname(url: str, nickname: str):
@@ -162,10 +168,11 @@ async def _():
     for nickname in bpr:
         try:
             stat = await api.stats.fetch_by_name(nickname, image=StatsImageType.ALL)
+            await update_level(stat, nickname)  
         except:
-            del bpr[nickname]
-            continue
-        await update_level(stat, nickname)              
+            del bpr[nickname]       
     with open(file_path, mode='w+') as jw:
         jw.write(json.dumps(bpr, indent=4, ensure_ascii=False))
         logger.info("季卡等级更新完毕")
+
+
