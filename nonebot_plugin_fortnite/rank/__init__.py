@@ -132,12 +132,12 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     if is_number(msg) and (int(msg) >= 3 or int(msg) <= 50):
         top_num = int(msg)
     # 排序, 按照等级(value)排序, reverse 倒序, 返回一个List[tuple]
-    sorted_bpr = sorted(bpr.items(), key = lambda item:item[1], reverse=True)
+    sorted_bpr = sorted(bpr.items(), key = lambda item:item[1])
     # 取出top_num个数据
-    sorted_bpr = sorted_bpr[0: top_num]
+    sorted_bpr = sorted_bpr[len(sorted_bpr)-top_num-1: len(sorted_bpr)-1]
     # bpr_str = "\n".join(f"top{sorted_bpr.index(i)+1} id:{i[0]} level:{i[1]}" for i in sorted_bpr)
-    nn_list = [i[0] for i in sorted_bpr].reverse()
-    level_list = [i[1] for i in sorted_bpr].reverse()
+    nn_list = [i[0] for i in sorted_bpr]
+    level_list = [i[1] for i in sorted_bpr]
     im =  await asyncio.get_event_loop().run_in_executor(
         None, _init_rank_graph, "季卡等级排行(查询战绩可收录id)", nn_list, level_list
     )
