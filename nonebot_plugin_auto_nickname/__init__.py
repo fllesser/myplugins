@@ -1,6 +1,5 @@
 import time, asyncio
 from random import choice
-from nonebot import get_driver
 from nonebot.adapters.onebot.v11 import Bot
 
 from services.log import logger
@@ -13,14 +12,12 @@ __plugin_author__ = "YiJiuChow"
 
 
 lz_list = ["绿头鸡", "鸡脖哥", "鸡脖王", "鸡脖哥哥"]
-gl = []
-driver = get_driver()
-
-@driver.on_bot_connect
-async def init_gl(bot: Bot):
-    gl = await bot.call_api("get_group_list")
-    gl = [g["group_id"] for g in gl]
-    logger.info(f"群列表初始化成功 {gl}")
+gl = [669026253, 754044548, 774331907, 782270111, 913941037, 1080197262, 1149277515]
+# bot = get_bot()
+# gl = bot.call_api("get_group_list")
+# gl = [g["group_id"] for g in gl]
+# bot = None
+# logger.info(f"群列表初始化成功 {gl}")
 
 @scheduler.scheduled_job("interval", minutes=1)
 async def _():

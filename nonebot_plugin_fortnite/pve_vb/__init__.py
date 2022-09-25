@@ -15,7 +15,7 @@ __plugin_usage__ = """
 usage：
     堡垒之夜PVE
     指令：
-        pve, vb图, v币图
+        vb图, v币图 不区分字母大小写
 """.strip()
 __plugin_type__ = ("堡批专属",)
 __plugin_cmd__ = ["vb图"]
@@ -23,7 +23,7 @@ __plugin_des__ = "STW(PVE) 每日VB图"
 __plugin_task__ = {"pve":"堡垒之夜PVE推送"}
 
 
-pve = on_command("pve", aliases={"vb图", "VB图", "V币图", "v币图"}, block=True)
+pve = on_command("vb图", aliases={"VB图", "V币图", "v币图"}, block=True)
 @pve.handle()
 async def _():
     await pve.finish(message=image(IMAGE_PATH / "fn_stw.png"))

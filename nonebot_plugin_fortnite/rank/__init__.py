@@ -67,6 +67,8 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
             result = "用户不存在"
         elif "match" in result:
             result = "该玩家当前赛季没有进行过任何对局"
+        elif "timed out" in result:
+            result = "请求超时, 请稍后再试"
         await season_stat.finish(message=result)
     logger.info("战绩查询成功")
     if result is not None:
@@ -102,6 +104,8 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
             result = "用户不存在"
         elif "match" in result:
             result = "该玩家没有进行过任何对局"
+        elif "timed out" in result:
+            result = "请求超时, 请稍后再试"
         await lifetime_stat.finish(message=result)
     logger.info("战绩查询成功")
     if result is not None:
