@@ -55,7 +55,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
         playerstats = await api.stats.fetch_by_name(nickname, time_window=TimeWindow.SEASON, image=StatsImageType.ALL)
         await update_level(playerstats, nickname)
         url = playerstats.image_url
-        # result = None
+        result = None
         # 匹配带中文昵称
         if re.search(r'[\u2E80-\u9FFF]', nickname, flags=0):
             result = write_chinese_nickname(url=url, nickname=nickname)
@@ -92,7 +92,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
         playerstats = await api.stats.fetch_by_name(nickname, image=StatsImageType.ALL)
         await update_level(playerstats, nickname)
         url = playerstats.image_url
-        # result = None
+        result = None
         # 匹配带中文昵称
         if re.search(r'[\u2E80-\u9FFF]', nickname, flags=0):
             result = write_chinese_nickname(url=url, nickname=nickname)
