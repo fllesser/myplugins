@@ -143,7 +143,7 @@ async def _(args: Message = CommandArg()):
     for nickname in bpr:
         if regex_str in nickname:
             del bpr[nickname]
-            await del_ranking.finish(message="成功将 {nickname} 移出排行")
+            await del_ranking.finish(message=f"成功将 {nickname} 移出排行")
     await del_ranking.finish(message="没有匹配到任何id")
 
 
