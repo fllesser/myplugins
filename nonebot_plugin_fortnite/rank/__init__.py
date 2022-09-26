@@ -50,7 +50,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
             nickname = card[3:len(card)] # 昵称替换为群名片id
         else:
             await season_stat.finish(message=
-            "群昵称(名片)设置为\n['id:', 'id：', 'id ']三选一(不区分大小写)\n加上你的游戏昵称发送 战绩 可快速查询当前赛季战绩")
+            "群昵称(名片)设置为\n['id:', 'id：', 'id '](三选一, 不区分大小写和中英文冒号)\n加上你的游戏昵称, 发送 战绩 可快速查询当前赛季战绩")
     try:
         playerstats = await api.stats.fetch_by_name(nickname, time_window=TimeWindow.SEASON, image=StatsImageType.ALL)
         await update_level(playerstats, nickname)
@@ -87,7 +87,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
             nickname = card[3:len(card)] # 昵称替换为群名片id
         else:
             await lifetime_stat.finish(message=
-            "群昵称(名片)设置为\n['id:', 'id：', 'id ']三选一(不区分大小写)\n加上你的游戏昵称发送 生涯战绩 可快速查询生涯战绩")
+            "群昵称(名片)设置为\n['id:', 'id：', 'id '](三选一, 不区分大小写和中英文冒号)\n加上你的游戏昵称, 发送 生涯战绩 可快速查询生涯战绩")
     try:
         playerstats = await api.stats.fetch_by_name(nickname, image=StatsImageType.ALL)
         await update_level(playerstats, nickname)
@@ -115,7 +115,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     await lifetime_stat.finish(message=result)
 
 
-battle_pass_ranking = on_command("bpr", aliases={"季卡排行", "季卡等级排行"}, block=True)
+battle_pass_ranking = on_command("bpr", aliases={"季卡排行", "季卡等级排行", "卷王排行"}, block=True)
 @battle_pass_ranking.handle()
 async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     msg = args.extract_plain_text().strip()
@@ -132,10 +132,21 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     nn_list = [i[0] for i in sorted_bpr]
     level_list = [i[1] for i in sorted_bpr]
     im = await asyncio.get_event_loop().run_in_executor(
-        None, _init_rank_graph, "季卡等级排行(查询战绩可收录id)", nn_list, level_list
+        None, _init_rank_graph, "季卡排行(查询战绩可收录id)", nn_list, level_list
     )
     await battle_pass_ranking.finish(message=image(b64=im.pic2bs4()))
-        
+
+del_ranking = on_command("dr", block=True)
+@del_ranking.handle()
+async def _(args: Message = CommandArg()):
+    regex_str = args.extract_plain_text().strip()
+    for nickname in bpr:
+        if regex_str in nickname:
+            del bpr[nickname]
+            await del_ranking.finish(message="成功将 {nickname} 移出排行")
+    await del_ranking.finish(message="没有匹配到任何id")
+
+
 def write_chinese_nickname(url: str, nickname: str):
     response = httpx.get(url)
     im = Image.open(BytesIO(response.content))
