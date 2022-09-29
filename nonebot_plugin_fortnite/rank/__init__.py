@@ -39,8 +39,24 @@ bpr = {} # dict
 file_path = "bpr.json"
 
 with open(file_path, mode='r') as jr:
-    # battle_pass_top # dict
     bpr = json.load(jr) 
+
+
+# 定时更新季卡等级, 每2小时更新一次
+@scheduler.scheduled_job('interval', hours=2)
+async def _():
+    for nickname in bpr:
+        try:
+            stat = await api.stats.fetch_by_name(nickname, image=StatsImageType.ALL)
+            await update_level(stat, nickname)
+        except Exception as e:
+            if "timed out" in str(e):
+                continue
+            del bpr[nickname]
+    with open(file_path, mode='w+') as jw:
+        jw.write(json.dumps(bpr, indent=4, ensure_ascii=False))
+        logger.info("季卡等级更新完毕")
+
 
 season_stat = on_command("战绩", block=True)
 @season_stat.handle()
@@ -62,15 +78,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
         if re.search(r'[\u2E80-\u9FFF]', nickname, flags=0):
             result = write_chinese_nickname(url=url, nickname=nickname)
     except Exception as e:
-        result = str(e)
-        if "public" in result:
-            result = "战绩未公开"
-        elif "exist" in result:
-            result = "用户不存在"
-        elif "match" in result:
-            result = "该玩家当前赛季没有进行过任何对局"
-        elif "timed out" in result:
-            result = "请求超时, 请稍后再试"
+        result = handle_exception(str(e))
         await season_stat.finish(message=result)
     logger.info("战绩查询成功")
     if result is not None:
@@ -99,15 +107,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
         if re.search(r'[\u2E80-\u9FFF]', nickname, flags=0):
             result = write_chinese_nickname(url=url, nickname=nickname)
     except Exception as e:
-        result = str(e)
-        if "public" in result:
-            result = "战绩未公开"
-        elif "exist" in result:
-            result = "用户不存在"
-        elif "match" in result:
-            result = "该玩家没有进行过任何对局"
-        elif "timed out" in result:
-            result = "请求超时, 请稍后再试"
+        result = handle_exception(str(e))
         await lifetime_stat.finish(message=result)
     logger.info("战绩查询成功")
     if result is not None:
@@ -152,7 +152,7 @@ async def _(args: Message = CommandArg()):
 def write_chinese_nickname(url: str, nickname: str):
     response = httpx.get(url)
     im = Image.open(BytesIO(response.content))
-    draw = ImageDraw.Draw(im) 
+    draw = ImageDraw.Draw(im)
     # 覆盖
     draw.rectangle(xy=(30, 90, 420, 230), fill="#012e57")
     # 填充昵称
@@ -165,26 +165,20 @@ def write_chinese_nickname(url: str, nickname: str):
     draw.text((X, 150), f'{nickname}', fill = "#fafafa", font=ttfont)
     return im
 
+# 查询战绩异常处理
+def handle_exception(e: str) -> str:
+    if "public" in e:
+        return "战绩未公开"
+    elif "exist" in e:
+        return "用户不存在"
+    elif "match" in e:
+        return "该玩家当前赛季没有进行过任何对局"
+    elif "timed out" in e:
+        return "请求超时, 请稍后再试"
+    return e
+
 # 更新季卡等级
 async def update_level(stat: BrPlayerStats, nickname: str):
     cache_level = bpr.get(nickname)
     if cache_level is None or cache_level != stat.battle_pass.level:
         bpr[nickname] = stat.battle_pass.level
-
-
-# 定时更新季卡等级, 每2小时更新一次
-@scheduler.scheduled_job('interval', hours=2)
-async def _():
-    for nickname in bpr:
-        try:
-            stat = await api.stats.fetch_by_name(nickname, image=StatsImageType.ALL)
-            await update_level(stat, nickname)  
-        except Exception as e:
-            if "timed out" in str(e):
-                continue
-            del bpr[nickname]       
-    with open(file_path, mode='w+') as jw:
-        jw.write(json.dumps(bpr, indent=4, ensure_ascii=False))
-        logger.info("季卡等级更新完毕")
-
-
