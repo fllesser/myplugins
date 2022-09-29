@@ -122,7 +122,7 @@ battle_pass_ranking = on_command("bpr", aliases={"季卡排行", "季卡等级�
 async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     msg = args.extract_plain_text().strip()
     top_num = 10 # 排行数, 默认为10
-    if is_number(msg) and (int(msg) >= 3 or int(msg) <= 50):
+    if is_number(msg) and (int(msg) >= 3 and int(msg) <= 50):
         top_num = int(msg)
     # 排序, 按照等级(value)排序, reverse 倒序, 返回一个List[tuple]
     sorted_bpr = sorted(bpr.items(), key = lambda item:item[1])
