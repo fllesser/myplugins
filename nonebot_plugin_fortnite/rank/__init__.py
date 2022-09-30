@@ -26,9 +26,9 @@ usage：
         生涯战绩 id
         bpr 季卡排行 卷王排行 + 3~50
         群昵称(名片)设置如下(三选一, 不区分大小写):
-            id:jarid harris
-            id：jarid harris
-            id jarid harris
+            id:jarid harris (英文冒号)
+            id：jarid harris (中文冒号)
+            id jarid harris (空格)
         发送 战绩或生涯战绩 可快速查询战绩
 """.strip()
 __plugin_type__ = ("堡批专属",)
@@ -70,7 +70,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
             nickname = card[3:len(card)] # 昵称替换为群名片id
         else:
             await season_stat.finish(message=
-            "群昵称(名片)设置如下(三选一, 不区分大小写):\n id:jarid harris \n id：jarid harris \n id jarid harris \n发送 战绩 可快速查询当前赛季战绩")
+            "群昵称(名片)设置如下(三选一, 不区分大小写):\n id:jarid harris(英文冒号) \n id：jarid harris(中文冒号) \n id jarid harris(空格) \n发送 战绩 可快速查询当前赛季战绩")
     try:
         playerstats = await api.stats.fetch_by_name(nickname, time_window=TimeWindow.SEASON, image=StatsImageType.ALL)
         await update_level(playerstats, nickname)
@@ -99,7 +99,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
             nickname = card[3:len(card)] # 昵称替换为群名片id
         else:
             await lifetime_stat.finish(message=
-            "群昵称(名片)设置如下(三选一, 不区分大小写):\n id:jarid harris \n id：jarid harris \n id jarid harris \n 发送 生涯战绩 可快速查询生涯战绩")
+            "群昵称(名片)设置如下(三选一, 不区分大小写):\n id:jarid harris(英文冒号) \n id：jarid harris(中文冒号) \n id jarid harris(空格) \n发送 生涯战绩 可快速查询生涯战绩")
     try:
         playerstats = await api.stats.fetch_by_name(nickname, image=StatsImageType.ALL)
         await update_level(playerstats, nickname)
