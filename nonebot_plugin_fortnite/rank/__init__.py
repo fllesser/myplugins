@@ -50,7 +50,7 @@ async def _():
     for nickname in bpr:
         try:
             stat = await api.stats.fetch_by_name(nickname, image=StatsImageType.ALL)
-            await update_level(stat, nickname)
+            await update_level(stat)
         except Exception as e:
             if "timed out" in str(e):
                 continue
@@ -73,7 +73,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
             "群昵称(名片)设置如下(三选一, 不区分大小写):\n id:jarid harris(英文冒号) \n id：jarid harris(中文冒号) \n id jarid harris(空格) \n发送 战绩 可快速查询当前赛季战绩")
     try:
         playerstats = await api.stats.fetch_by_name(nickname, time_window=TimeWindow.SEASON, image=StatsImageType.ALL)
-        await update_level(playerstats, nickname)
+        await update_level(playerstats)
         url = playerstats.image_url
         result = None
         # 匹配带中文昵称
@@ -102,7 +102,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
             "群昵称(名片)设置如下(三选一, 不区分大小写):\n id:jarid harris(英文冒号) \n id：jarid harris(中文冒号) \n id jarid harris(空格) \n发送 生涯战绩 可快速查询生涯战绩")
     try:
         playerstats = await api.stats.fetch_by_name(nickname, image=StatsImageType.ALL)
-        await update_level(playerstats, nickname)
+        await update_level(playerstats)
         url = playerstats.image_url
         result = None
         # 匹配带中文昵称
@@ -180,7 +180,7 @@ def handle_exception(e: str) -> str:
     return e
 
 # 更新季卡等级
-async def update_level(stat: BrPlayerStats, nickname: str):
-    cache_level = bpr.get(nickname)
+async def update_level(stat: BrPlayerStats):
+    cache_level = bpr.get(stat.user.name)
     if cache_level is None or cache_level != stat.battle_pass.level:
-        bpr[nickname] = stat.battle_pass.level
+        bpr[stat.user.name] = stat.battle_pass.level
