@@ -47,9 +47,11 @@ with open(file_path, mode='r') as jr:
 # 定时更新季卡等级, 每2小时更新一次
 @scheduler.scheduled_job('interval', hours=2)
 async def _():
-    for nickname in bpr:
+    for nickname in list(bpr.keys()):
         try:
             stat = await api.stats.fetch_by_name(nickname, image=StatsImageType.ALL)
+            if nickname != stat.user.name: # 这两行代码, 过一段时间后即可删除
+                del bpr[nickname]          # 这两行代码, 过一段时间后即可删除
             await update_level(stat)
         except Exception as e:
             if "timed out" in str(e):
@@ -118,7 +120,6 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
         result = image(url)
     await lifetime_stat.finish(message=result)
 
-
 battle_pass_ranking = on_command("bpr", aliases={"季卡排行", "季卡等级排行", "卷王排行"}, block=True)
 @battle_pass_ranking.handle()
 async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
@@ -144,7 +145,7 @@ del_ranking = on_command("dr", block=True)
 @del_ranking.handle()
 async def _(args: Message = CommandArg()):
     regex_str = args.extract_plain_text().strip()
-    for nickname in bpr:
+    for nickname in list(bpr.keys()):
         if regex_str in nickname:
             del bpr[nickname]
             await del_ranking.finish(message=f"成功将 {nickname} 移出排行")
