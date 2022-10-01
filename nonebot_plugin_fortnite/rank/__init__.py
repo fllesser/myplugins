@@ -1,4 +1,5 @@
 from typing import List
+from aiohttp import payload_type
 from nonebot.params import CommandArg
 from nonebot.plugin import on_command
 from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message
@@ -50,8 +51,8 @@ async def _():
     for nickname in list(bpr.keys()):
         try:
             stat = await api.stats.fetch_by_name(nickname, image=StatsImageType.ALL)
-            if nickname != stat.user.name: # 这两行代码, 过一段时间后即可删除
-                del bpr[nickname]          # 这两行代码, 过一段时间后即可删除
+            if nickname != stat.user.name: # d
+                del bpr[nickname]          # d
             await update_level(stat)
         except Exception as e:
             if "timed out" in str(e):
@@ -76,6 +77,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     try:
         playerstats = await api.stats.fetch_by_name(nickname, time_window=TimeWindow.SEASON, image=StatsImageType.ALL)
         await update_level(playerstats)
+        nickname = playerstats.user.name
         url = playerstats.image_url
         result = None
         # 匹配带中文昵称
@@ -105,6 +107,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     try:
         playerstats = await api.stats.fetch_by_name(nickname, image=StatsImageType.ALL)
         await update_level(playerstats)
+        nickname = playerstats.user.name
         url = playerstats.image_url
         result = None
         # 匹配带中文昵称
