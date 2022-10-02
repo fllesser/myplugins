@@ -10,6 +10,12 @@
   - rank 战绩查询
   - daily_shop  每日商城
 
+
+# 使用说明
+ 1. 先成功安装并运行zhenxun_bot
+ 2. cd到zhenxun目录的myplugin git clone 这个仓库
+ 3. 重启zhenxun_bot,不需要的插件自行删除
+   
 git config --global credential.helper store
 
 git remote set-url --add --push origin https://github.com/YiJiuChow/myplugins.git

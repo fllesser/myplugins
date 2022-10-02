@@ -51,8 +51,8 @@ async def _():
     for nickname in list(bpr.keys()):
         try:
             stat = await api.stats.fetch_by_name(nickname, image=StatsImageType.ALL)
-            if nickname != stat.user.name: # d
-                del bpr[nickname]          # d
+            # if nickname != stat.user.name: # d
+            #     del bpr[nickname]          # d
             await update_level(stat)
         except Exception as e:
             if "timed out" in str(e):
