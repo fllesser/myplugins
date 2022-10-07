@@ -2,7 +2,7 @@ from typing import List
 from aiohttp import payload_type
 from nonebot.params import CommandArg
 from nonebot.plugin import on_command
-from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message
+from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message, GROUP_ADMIN
 
 from utils.message_builder import image
 from utils.image_utils import pic2b64
@@ -144,7 +144,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     )
     await battle_pass_ranking.finish(message=image(b64=im.pic2bs4()))
 
-del_ranking = on_command("dr", block=True)
+del_ranking = on_command("dr", block=True, permission=GROUP_ADMIN)
 @del_ranking.handle()
 async def _(args: Message = CommandArg()):
     regex_str = args.extract_plain_text().strip()
