@@ -74,7 +74,7 @@ kugm = on_command("kugm", priority=5, permission=SUPERUSER, block=True)
 async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
     baned_user = get_message_at(event.json())
     if baned_user:
-        if not (await bot.get_group_member_info(group_id=event.group_id, user_id=baned_user[0], no_cache=True))["role"] == "member":
+        if (await bot.get_group_member_info(group_id=event.group_id, user_id=baned_user[0], no_cache=True))["role"] != "member":
             await kickuser.finish(message="机器人权限不足")
         msg = arg.extract_plain_text().strip()
         ban_time = 600
@@ -90,7 +90,7 @@ async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
 async def _(bot: Bot, event: GroupMessageEvent):
     kicked_user = get_message_at(event.json())
     if kicked_user:
-        if not (await bot.get_group_member_info(group_id=event.group_id, user_id=kicked_user[0], no_cache=True))["role"] == "member":
+        if (await bot.get_group_member_info(group_id=event.group_id, user_id=kicked_user[0], no_cache=True))["role"] != "member":
             await kickuser.finish(message="机器人权限不足")
         await bot.set_group_kick(group_id=event.group_id, user_id=kicked_user[0])
         logger.info(f"kick success group_id = {event.group_id}, user_id = {kicked_user[0]}")
@@ -107,7 +107,3 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
         kicked_num = int(msg)
     result = await kick_not_active_member(bot=bot, group_id=event.group_id, kicked_num=kicked_num)
     await kugm.finish(message=result)
-
-
-
-
