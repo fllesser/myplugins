@@ -1,3 +1,4 @@
+from matplotlib.pyplot import get
 from nonebot.plugin import on_command
 
 from utils.utils import scheduler, get_bot
@@ -27,9 +28,9 @@ async def shopupshop():
         bot = get_bot()
         gl = await bot.get_group_list()
         gl = [g["group_id"] for g in gl]
+        result = get_dailyshop()
         for g in gl:
             if await group_manager.check_group_task_status(g, 'fn'):
-                result = image("https://cdn.dingpanbao.cn/blzy/shop.png")
                 await bot.send_group_msg(group_id=g, message=result) 
     except Exception as e:
         logger.error("堡垒之夜商城错误 {e}")
@@ -37,4 +38,11 @@ async def shopupshop():
 shopshop = on_command("商城", priority=5, block=True)    
 @shopshop.handle()
 async def _():
-    await shopshop.finish(message=image("https://cdn.dingpanbao.cn/blzy/shop.png"))
+    result = get_dailyshop()
+    await shopshop.finish(message=result)
+
+def get_dailyshop():
+    result = image("https://cdn.dingpanbao.cn/blzy/shop.png")
+    if result is None or result == "":
+        result = "堡垒皮肤api请求超时"
+    return result
