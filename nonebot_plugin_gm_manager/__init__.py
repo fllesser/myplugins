@@ -29,10 +29,11 @@ driver = get_driver()
 # websocket连接后 初始化query_start
 @driver.on_bot_connect
 async def init_condition(bot: Bot):
-    g_list = [754044548]# [913941037, 754044548]
-    for g in g_list:
-        members = await get_kicked_list(bot=bot, group_id=g, kicked_num=1)
-        logger.info(f"群 {g} query_start_dict 初始化完成 len(members)={len(members)}")
+    # g_list = [754044548]# [913941037, 754044548]
+    # for g in g_list:
+    g = 754044548
+    members = await get_kicked_list(bot=bot, group_id=g, kicked_num=1)
+    logger.info(f"群 {g} query_start_dict 初始化完成 len(members)={len(members)}")
     logger.info(f"query_start_dict : {GroupInfoUserByMe.query_start_dict}")
 
 # 权限过滤
