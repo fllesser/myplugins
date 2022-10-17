@@ -1,9 +1,8 @@
 from nonebot import on_command
 from nonebot.log import logger
 from nonebot.typing import T_State
-from nonebot.params import State
 from nonebot.adapters.onebot.v11 import Bot, Event, Message
-from nonebot.params import CommandArg, ArgStr
+from nonebot.params import CommandArg, ArgStr, StateParam
 from .data import text_to_emoji
 
 __zx_plugin_name__ = "抽象化语句"
@@ -27,7 +26,7 @@ __plugin_settings__ = {
 abstract = on_command("abs", aliases={"抽象", "抽象化"}, priority=5, block=True)
 
 @abstract.handle()
-async def _(state: T_State = State(), arg: Message = CommandArg()):
+async def _(state: T_State, arg: Message = CommandArg()):
     if arg.extract_plain_text().strip():
         state["abstract"] = arg.extract_plain_text().strip()
 
