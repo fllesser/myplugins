@@ -55,9 +55,10 @@ async def _():
             #     del bpr[nickname]          # d
             await update_level(stat)
         except Exception as e:
-            if "timed out" in str(e):
-                continue
-            del bpr[nickname]
+            # if "timed out" in str(e):
+            #     continue
+            if "exist" in str(e):
+                del bpr[nickname]
     with open(file_path, mode='w+') as jw:
         jw.write(json.dumps(bpr, indent=4, ensure_ascii=False))
         logger.info("季卡等级更新完毕")
@@ -181,7 +182,7 @@ def handle_exception(e: str) -> str:
         return "该玩家当前赛季没有进行过任何对局"
     elif "timed out" in e:
         return "请求超时, 请稍后再试"
-    return e
+    return "未做处理的异常" + e
 
 # 更新季卡等级
 async def update_level(stat: BrPlayerStats):
