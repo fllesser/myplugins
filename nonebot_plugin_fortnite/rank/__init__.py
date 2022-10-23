@@ -78,7 +78,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     try:
         playerstats = await api.stats.fetch_by_name(nickname, time_window=TimeWindow.SEASON, image=StatsImageType.ALL)
         await update_level(playerstats)
-        nickname = playerstats.user.name
+        nickname = playerstats.user.name # 重置nickname 防止字母大小写, 导致排行重名
         url = playerstats.image_url
         result = None
         # 匹配带中文昵称
@@ -154,7 +154,6 @@ async def _(args: Message = CommandArg()):
             del bpr[nickname]
             await del_ranking.finish(message=f"成功将 {nickname} 移出排行")
     await del_ranking.finish(message="没有匹配到任何id")
-
 
 def write_chinese_nickname(url: str, nickname: str):
     response = httpx.get(url)
