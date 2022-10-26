@@ -45,7 +45,7 @@ with open(file_path, mode='r') as jr:
     bpr = json.load(jr) 
 
 
-# 定时更新季卡等级, 每2小时更新一次
+# 定时更新季卡等级, 2小时更新一次
 @scheduler.scheduled_job('interval', hours=2)
 async def _():
     for nickname in list(bpr.keys()):
@@ -62,7 +62,6 @@ async def _():
     with open(file_path, mode='w+') as jw:
         jw.write(json.dumps(bpr, indent=4, ensure_ascii=False))
         logger.info("季卡等级更新完毕")
-
 
 season_stat = on_command("战绩", block=True)
 @season_stat.handle()
