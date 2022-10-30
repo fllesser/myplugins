@@ -1,5 +1,6 @@
 import httpx
 import time
+import asyncio
 
 from bs4 import BeautifulSoup
 from PIL import Image, ImageFont
@@ -13,12 +14,18 @@ from configs.path_config import IMAGE_PATH
 
 
 async def update_daily_vb() -> str:
-    url = "https://freethevbucks.com/timed-missions/"
-    html_content = httpx.get(url).content
-    soup = BeautifulSoup(html_content, "lxml")
+    while True:
+        try:
+            url = "https://freethevbucks.com/timed-missions/"
+            html_content = httpx.get(url).content
+            soup = BeautifulSoup(html_content, "lxml")
+            break
+        except:
+            await asyncio.sleep(30)
+            pass
     # vb图
     img = BuildImage(w=256, h=200, font_size=15,
-                     color=(36, 44, 68), font="gorga.otf")
+                    color=(36, 44, 68), font="gorga.otf")
     Y = 30
     # 电力图标
     ele_img = Image.open(BytesIO(httpx.get(
