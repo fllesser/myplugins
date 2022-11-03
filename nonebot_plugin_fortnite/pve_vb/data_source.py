@@ -20,9 +20,10 @@ async def update_daily_vb() -> str:
             html_content = httpx.get(url).content
             soup = BeautifulSoup(html_content, "lxml")
             break
-        except:
+        except Exception as e:
+            logger.error('reason:', e)  
             await asyncio.sleep(30)
-            pass
+            continue
     # vb图
     img = BuildImage(w=256, h=200, font_size=15,
                     color=(36, 44, 68), font="gorga.otf")
@@ -31,6 +32,11 @@ async def update_daily_vb() -> str:
     ele_img = Image.open(BytesIO(httpx.get(
         "https://img.icons8.com/office/30/000000/lightning-bolt.png").content))
     ele_img = ele_img.resize((20, 20), Image.LANCZOS)
+    # TODO 准备加一个vb图标
+    # vb_icon = Image.open(BytesIO(httpx.get().content))
+
+
+
     # 当前时间
     timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     await img.atext(pos=(0, 170), text=timestr, center_type="by_width", fill=(255, 255, 255))
