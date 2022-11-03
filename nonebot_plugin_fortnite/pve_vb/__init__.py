@@ -1,3 +1,8 @@
+import imp
+
+
+import asyncio
+
 from nonebot.plugin import on_command
 from nonebot.permission import SUPERUSER
 from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent
@@ -41,12 +46,17 @@ async def _(bot: Bot, event: GroupMessageEvent):
 )
 async def _():
     # msg = None
-    try:
-        img_name = await update_daily_vb()
-        msg = image(IMAGE_PATH / img_name)
-    except Exception as e:
-        logger.error(f"PVE vb图更新错误 {e}")
-        msg = f"vb图定时更新失败, 错误信息{e}, 请手动更新"
+    while True:
+        try:
+            img_name = await update_daily_vb()
+            msg = image(IMAGE_PATH / img_name)
+            break
+        except Exception as e:
+            logger.error(f"PVE vb图更新错误 {e}")
+            # msg = f"vb图定时更新失败, 错误信息{e}, 请手动更新"
+            # ssl错误, 重新更新vb图
+            await asyncio.sleep(30)
+            continue
     bot = get_bot()
     gl = await bot.get_group_list()
     gl = [g["group_id"] for g in gl]

@@ -14,20 +14,11 @@ from configs.path_config import IMAGE_PATH
 
 
 async def update_daily_vb() -> str:
-    while True:
-        try:
-            url = "https://freethevbucks.com/timed-missions/"
-            html_content = httpx.get(url).content
-            soup = BeautifulSoup(html_content, "lxml")
-            break
-        except Exception as e:
-            logger.error('reason:', e)  
-            await asyncio.sleep(30)
-            continue
-    # vb图
-    img = BuildImage(w=256, h=200, font_size=15,
-                    color=(36, 44, 68), font="gorga.otf")
-    Y = 30
+
+    url = "https://freethevbucks.com/timed-missions/"
+    html_content = httpx.get(url).content
+    soup = BeautifulSoup(html_content, "lxml")
+
     # 电力图标
     ele_img = Image.open(BytesIO(httpx.get(
         "https://img.icons8.com/office/30/000000/lightning-bolt.png").content))
@@ -35,9 +26,11 @@ async def update_daily_vb() -> str:
     # TODO 准备加一个vb图标
     # vb_icon = Image.open(BytesIO(httpx.get().content))
 
-
-
-    # 当前时间
+    # vb图
+    img = BuildImage(w=256, h=200, font_size=15,
+                    color=(36, 44, 68), font="gorga.otf")
+    # 起始纵坐标
+    Y = 30
     timestr = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     await img.atext(pos=(0, 170), text=timestr, center_type="by_width", fill=(255, 255, 255))
     for item in soup.find_all("p"):
