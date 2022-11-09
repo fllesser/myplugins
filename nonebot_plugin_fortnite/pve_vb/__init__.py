@@ -1,6 +1,3 @@
-import imp
-
-
 import asyncio
 
 from nonebot.plugin import on_command
