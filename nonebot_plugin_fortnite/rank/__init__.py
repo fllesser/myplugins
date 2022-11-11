@@ -143,7 +143,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     )
     await battle_pass_ranking.finish(message=image(b64=im.pic2bs4()))
 
-del_ranking = on_command("dr", block=True, permission=(GROUP_ADMIN, SUPERUSER))
+del_ranking = on_command("dr", block=True, permission=SUPERUSER)
 async def _(args: Message = CommandArg()):
     regex_str = args.extract_plain_text().strip()
     for nickname in list(bpr.keys()):
