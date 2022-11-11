@@ -2,7 +2,7 @@ class MyStr():
 
     value: str = ''
 
-    def appendLine(self, s: str) -> 'MyStr':
+    def append_line(self, s: str) -> 'MyStr':
         self.value += s + "\n"
         return self
 
