@@ -1,7 +1,7 @@
 from nonebot.params import CommandArg
 from nonebot.plugin import on_command
-from nonebot.permission import SUPERUSER
-from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message, GROUP_ADMIN
+from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message
+
 
 from utils.message_builder import image
 from utils.image_utils import pic2b64
@@ -25,6 +25,7 @@ usage：
         战绩 id
         生涯战绩 id
         bpr 季卡排行 卷王排行 + 3~50
+        dbp delbyprefix 前缀匹配删除
         群昵称(名片)设置如下(三选一, 不区分大小写):
             id:jarid harris (英文冒号)
             id：jarid harris (中文冒号)
@@ -143,7 +144,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     )
     await battle_pass_ranking.finish(message=image(b64=im.pic2bs4()))
 
-del_ranking = on_command("dr")
+del_ranking = on_command("dbp", block=True)
 async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     regex_str = args.extract_plain_text().strip()
     for nickname in list(bpr.keys()):
