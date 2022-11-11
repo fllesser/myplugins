@@ -9,6 +9,7 @@ from utils.utils import is_number, scheduler
 from utils.data_utils import _init_rank_graph
 from configs.path_config import FONT_PATH
 from services.log import logger
+from myplugins.myutils.mystr import MyStr
 
 from fortnite_api import StatsImageType, FortniteAPI, TimeWindow, BrPlayerStats
 from PIL import Image, ImageFont, ImageDraw
@@ -72,8 +73,12 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
         if card is not None and card[0:3].casefold() in ["id:", "id：", "id ",]:
             nickname = card[3:len(card)] # 昵称替换为群名片id
         else:
-            await season_stat.finish(message=
-            "群昵称(名片)设置如下(三选一, 不区分大小写):\n id:jarid harris(英文冒号) \n id：jarid harris(中文冒号) \n id jarid harris(空格) \n发送 战绩 可快速查询当前赛季战绩")
+            await season_stat.finish(message=MyStr()
+            .appendLine("群昵称(名片)设置如下(三选一, 不区分大小写):")
+            .appendLine("  id:jarid harris(英文冒号)")
+            .appendLine("  id：jarid harris(中文冒号, 无空格)")
+            .appendLine("  id jarid harris(空格)")
+                .append("发送 战绩 可快速查询战绩"))
     try:
         playerstats = await api.stats.fetch_by_name(nickname, time_window=TimeWindow.SEASON, image=StatsImageType.ALL)
         await update_level(playerstats)
@@ -102,8 +107,12 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
         if card is not None and card[0:3].casefold() in ["id:", "id：", "id ",]:
             nickname = card[3:len(card)] # 昵称替换为群名片id
         else:
-            await lifetime_stat.finish(message=
-            "群昵称(名片)设置如下(三选一, 不区分大小写):\n id:jarid harris(英文冒号) \n id：jarid harris(中文冒号) \n id jarid harris(空格) \n发送 生涯战绩 可快速查询生涯战绩")
+            await lifetime_stat.finish(message=MyStr()
+            .appendLine("群昵称(名片)设置如下(三选一, 不区分大小写):")
+            .appendLine(" id:jarid harris(英文冒号)")
+            .appendLine(" id：jarid harris(中文冒号,无空格)")
+            .appendLine(" id jarid harris(空格)")
+            .append("发送 生涯战绩 可快速查询生涯战绩"))
     try:
         playerstats = await api.stats.fetch_by_name(nickname, image=StatsImageType.ALL)
         await update_level(playerstats)
