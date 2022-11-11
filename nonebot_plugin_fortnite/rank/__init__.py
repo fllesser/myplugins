@@ -1,7 +1,6 @@
-from typing import List
-from aiohttp import payload_type
 from nonebot.params import CommandArg
 from nonebot.plugin import on_command
+from nonebot.permission import SUPERUSER
 from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message, GROUP_ADMIN
 
 from utils.message_builder import image
@@ -144,8 +143,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     )
     await battle_pass_ranking.finish(message=image(b64=im.pic2bs4()))
 
-del_ranking = on_command("dr", block=True, permission=GROUP_ADMIN)
-@del_ranking.handle()
+del_ranking = on_command("dr", block=True, permission=(GROUP_ADMIN, SUPERUSER))
 async def _(args: Message = CommandArg()):
     regex_str = args.extract_plain_text().strip()
     for nickname in list(bpr.keys()):
@@ -180,7 +178,7 @@ def handle_exception(e: str) -> str:
         return "该玩家当前赛季没有进行过任何对局"
     elif "timed out" in e:
         return "请求超时, 请稍后再试"
-    return "未做处理的异常" + e
+    return "未做处理的异常: " + e
 
 # 更新季卡等级
 async def update_level(stat: BrPlayerStats):
