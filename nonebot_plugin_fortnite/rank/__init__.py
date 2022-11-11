@@ -143,8 +143,8 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     )
     await battle_pass_ranking.finish(message=image(b64=im.pic2bs4()))
 
-del_ranking = on_command("dr", priority=1)
-async def _(event: GroupMessageEvent, args: Message = CommandArg()):
+del_ranking = on_command("dr")
+async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     regex_str = args.extract_plain_text().strip()
     for nickname in list(bpr.keys()):
         if regex_str in nickname:
