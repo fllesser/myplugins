@@ -28,9 +28,9 @@ usage：
         bpr 季卡排行/名 卷王排行/名 + 3~50
         dr 删除排行
         群昵称(名片)设置如下(三选一, 不区分大小写):
-            id:jarid harris (英文冒号)
-            id：jarid harris (中文冒号)
-            id jarid harris (空格)
+            id:Oswald (英文冒号)
+            id：Oswald (中文冒号,无空格)
+            id Oswald (空格)
         发送 战绩或生涯战绩 可快速查询战绩
 """.strip()
 __plugin_type__ = ("堡批专属",)
@@ -52,12 +52,8 @@ async def _():
     for nickname in list(bpr.keys()):
         try:
             stat = await api.stats.fetch_by_name(nickname, image=StatsImageType.ALL)
-            # if nickname != stat.user.name: # d
-            #     del bpr[nickname]          # d
             await update_level(stat)
         except Exception as e:
-            # if "timed out" in str(e):
-            #     continue
             if "exist" in str(e):
                 del bpr[nickname]
     with open(file_path, mode='w+') as jw:
