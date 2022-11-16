@@ -9,7 +9,6 @@ from utils.utils import is_number, scheduler
 from utils.data_utils import _init_rank_graph
 from configs.path_config import FONT_PATH
 from services.log import logger
-
 from myplugins.myutils.mystr import MyStr
 
 from fortnite_api import StatsImageType, FortniteAPI, TimeWindow, BrPlayerStats
@@ -26,7 +25,7 @@ usage：
     指令：
         战绩 id
         生涯战绩 id
-        bpr 季卡排行 卷王排行 + 3~50
+        bpr 季卡排行/名 卷王排行/名 + 3~50
         dr 删除排行
         群昵称(名片)设置如下(三选一, 不区分大小写):
             id:jarid harris (英文冒号)
@@ -133,7 +132,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
         result = image(url)
     await lifetime_stat.finish(message=result)
 
-battle_pass_ranking = on_command("bpr", aliases={"季卡排行", "季卡等级排行", "卷王排行"}, block=True)
+battle_pass_ranking = on_command("bpr", aliases={"季卡排行","季卡排名","卷王排行","卷王排名"}, block=True)
 @battle_pass_ranking.handle()
 async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     msg = args.extract_plain_text().strip()
