@@ -12,18 +12,18 @@ __plugin_version__ = 0.1
 __plugin_author__ = "YiJiuChow"
 
 TS_ID = "today_school"
+TS_COMMAND = "python3 auto-cpdaily/index.py"
 FILE_NAME = "success.info"
 
 # 默认定时任务
 @scheduler.scheduled_job("cron", hour=3, minute=10, id=TS_ID)
 async def ts(): # 签到函数
     bot = get_bot()
-    ts_command = "python3 auto-cpdaily/index.py"
     try:
         if os.path.exists(FILE_NAME):
             os.remove(FILE_NAME)
-        os.popen(ts_command)
-        logger.info(f"今日校园 {ts_command} 开始执行")
+        os.popen(TS_COMMAND)
+        logger.info(f"今日校园 {TS_COMMAND} 开始执行")
         await asyncio.sleep(80)
         with open(FILE_NAME, 'r') as f:
             str = f.read()
