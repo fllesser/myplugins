@@ -38,6 +38,7 @@ __plugin_cmd__ = ["战绩"]
 __plugin_des__ = "堡垒之夜战绩查询"
 
 
+
 api = FortniteAPI(api_key = "f3f4e682-346e-45b1-8323-fe77aaea2a68", run_async = True)
 bpr = {} # dict
 file_path = "bpr.json"
