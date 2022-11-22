@@ -37,7 +37,10 @@ async def _(event: PrivateMessageEvent, args: Message = CommandArg()):
 todo_list = on_command("todolist", priority=5, permission=SUPERUSER, block=True)
 @todo_list.handle()
 async def _():
-    await todo_list.finish(message=todo_dict)
+    td = MyStr()
+    for k, v in todo_dict:
+        td.append_line(f"{k[0:2]}:{k[2:4]} -> {v}")
+    await todo_list.finish(message=td.append())
 
 async def todo_aps(job_id: str):
     bot = get_bot()
