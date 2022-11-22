@@ -30,21 +30,36 @@ async def _(event: PrivateMessageEvent, args: Message = CommandArg()):
         id = job_str[0], args = [job_str[0]])
     await todo.finish(message=MyStr()
             .append_line("TODO JOB ADD SUCCESS")
-            .append_line(f"  {job_str[0][0:2]}:{job_str[0][2:4]} {job_str[1]}")
+            .append_line("  You're going to do:")
+            .append_line(f"  -- {job_str[0][0:2]}:{job_str[0][2:4]} {job_str[1]}")
+            .append_line("  I'll remind you then.")
             .append("END")
         )
 
 todo_list = on_command("todolist", priority=5, permission=SUPERUSER, block=True)
 @todo_list.handle()
 async def _():
-    td = MyStr()
-    for k, v in todo_dict:
-        td.append_line(f"{k[0:2]}:{k[2:4]} -> {v}")
-    await todo_list.finish(message=td.append())
+    td_list = MyStr()
+    for k, v in todo_dict.items():
+        td_list.append_line(f"  {k[0:2]}:{k[2:4]} {v}")
+    await todo_list.finish(message=
+        MyStr()
+            .append_line("TODO JOB LIST")
+            .append_line("  You're going to do:")
+            .append_line(td_list.value)
+            .append_line("  I'll remind you then.")
+            .append("END"))
 
 async def todo_aps(job_id: str):
     bot = get_bot()
-    await bot.send_private_msg(user_id='1942422015', message=todo_dict[job_id])
+    await bot.send_private_msg(user_id='1942422015', 
+        message=MyStr()
+            .append_line("TODO JOB")
+            .append_line("  You should be right now:")
+            .append_line(  -- todo_dict[job_id])
+            .append_line("  Right now. Right now.")
+            .append("END")
+        )
     del todo_dict[job_id]
     
 
