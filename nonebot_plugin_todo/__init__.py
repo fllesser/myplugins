@@ -9,6 +9,8 @@ from myplugins.myutils.mystr import MyStr
 
 import datetime, time
 
+
+
 __zx_plugin_name__ = "时间群昵称"
 __plugin_version__ = 0.1
 __plugin_author__ = "YiJiuChow"
@@ -24,7 +26,7 @@ async def _(event: PrivateMessageEvent, args: Message = CommandArg()):
     lt = time.localtime()
     scheduler.add_job(
         todo_aps, "date", 
-        run_date = datetime(lt.tm_year, lt.tm_mon, lt.tm_mday, int(job_str[0][0:2]), int(job_str[0][2:4]), 0),
+        run_date = datetime.datetime(lt.tm_year, lt.tm_mon, lt.tm_mday, int(job_str[0][0:2]), int(job_str[0][2:4]), 0),
         id = job_str[0], args = [job_str[0]])
     await todo.finish(message=MyStr()
             .append_line("TODO JOB ADD SUCCESS")
