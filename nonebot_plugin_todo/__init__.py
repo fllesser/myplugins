@@ -55,7 +55,7 @@ async def todo_aps(job_id: str):
         message=MyStr()
             .append_line("TODO JOB")
             .append_line("  You should be right now:")
-            .append_line(  - todo_dict[job_id])
+            .append_line(f"  - {todo_dict[job_id]}")
             .append_line("  Right now. Right now.")
             .append("END")
         )
