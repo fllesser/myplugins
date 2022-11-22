@@ -31,7 +31,7 @@ async def _(event: PrivateMessageEvent, args: Message = CommandArg()):
     await todo.finish(message=MyStr()
             .append_line("TODO JOB ADD SUCCESS")
             .append_line("  You're going to do:")
-            .append_line(f"  -- {job_str[0][0:2]}:{job_str[0][2:4]} {job_str[1]}")
+            .append_line(f"  - {job_str[0][0:2]}:{job_str[0][2:4]} {job_str[1]}")
             .append_line("  I'll remind you then.")
             .append("END")
         )
@@ -41,13 +41,12 @@ todo_list = on_command("todolist", priority=5, permission=SUPERUSER, block=True)
 async def _():
     td_list = MyStr()
     for k, v in todo_dict.items():
-        td_list.append_line(f"  {k[0:2]}:{k[2:4]} {v}")
+        td_list.append_line(f"  - {k[0:2]}:{k[2:4]} {v}")
     await todo_list.finish(message=
         MyStr()
             .append_line("TODO JOB LIST")
-            .append_line("  You're going to do:")
+            .append_line("")
             .append_line(td_list.value)
-            .append_line("  I'll remind you then.")
             .append("END"))
 
 async def todo_aps(job_id: str):
@@ -56,7 +55,7 @@ async def todo_aps(job_id: str):
         message=MyStr()
             .append_line("TODO JOB")
             .append_line("  You should be right now:")
-            .append_line(  -- todo_dict[job_id])
+            .append_line(  - todo_dict[job_id])
             .append_line("  Right now. Right now.")
             .append("END")
         )
