@@ -18,7 +18,7 @@ __plugin_author__ = "YiJiuChow"
 
 todo_dict: dict = {}
 
-todo = on_command("todo", priority=5, permission=SUPERUSER, block=True)
+todo = on_command("todo", priority=5, permission=SUPERUSER, priority=5, block=True)
 @todo.handle()
 async def _(event: PrivateMessageEvent, args: Message = CommandArg()):
     job_str = args.extract_plain_text().split(' ')
@@ -36,7 +36,7 @@ async def _(event: PrivateMessageEvent, args: Message = CommandArg()):
             .append("END")
         )
 
-todo_list = on_command("todolist", priority=5, permission=SUPERUSER, block=True)
+todo_list = on_command("todolist", priority=5, permission=SUPERUSER, priority=1, block=True)
 @todo_list.handle()
 async def _():
     td_list = MyStr()
