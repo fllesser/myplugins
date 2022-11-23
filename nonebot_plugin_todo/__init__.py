@@ -27,7 +27,7 @@ async def _(event: PrivateMessageEvent, args: Message = CommandArg()):
     job_hour = job_str[0][0:2]
     job_minute = job_str[0][2:4]
     run_date = datetime.datetime(lt.tm_year, lt.tm_mon, lt.tm_mday, int(job_hour), int(job_minute), 0)
-    if lt.tm_hour > int(job_hour) or (lt.tm_hour == int(job_hour) and lt.tm_min >= job_minute):
+    if lt.tm_hour > int(job_hour) or (lt.tm_hour == int(job_hour) and lt.tm_min >= int(job_minute)):
         run_date = run_date + datetime.timedelta(days=1)
     scheduler.add_job(todo_aps, "date", run_date = run_date, id = job_str[0], args = [job_str[0]])
     await todo.finish(message = MyStr()
