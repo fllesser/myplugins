@@ -22,13 +22,14 @@ todo = on_command("todo", priority=5, permission=SUPERUSER, block=True)
 @todo.handle()
 async def _(event: PrivateMessageEvent, args: Message = CommandArg()):
     job_str = args.extract_plain_text().split(' ')
-    todo_dict[job_str[0]] = job_str[1]
     lt = time.localtime()
     job_hour = job_str[0][0:2]
     job_minute = job_str[0][2:4]
     run_date = datetime.datetime(lt.tm_year, lt.tm_mon, lt.tm_mday, int(job_hour), int(job_minute), 0)
     if lt.tm_hour > int(job_hour) or (lt.tm_hour == int(job_hour) and lt.tm_min >= int(job_minute)):
         run_date = run_date + datetime.timedelta(days=1)
+        job_str[1] = run_date.strftime("%m-%d") + " " + job_str[1]
+    todo_dict[job_str[0]] = job_str[1]
     scheduler.add_job(todo_aps, "date", run_date = run_date, id = job_str[0], args = [job_str[0]])
     await todo.finish(message = MyStr()
             .append_line("TODO JOB ADD SUCCESS")
