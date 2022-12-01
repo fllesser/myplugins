@@ -31,8 +31,8 @@ async def ts(): # 签到函数
     except Exception as e:
         logger.error(f"今日校园错误 {e}")
     if bot:
-        #superusers_set = bot.config.superusers
-        #for superuser in superusers_set:
+        # superusers_set = bot.config.superusers
+        # for superuser in superusers_set:
         await bot.send_group_msg(group_id=774331907, message=Message(f"今日校园签到状态: {str}"))
 
 @scheduler.scheduled_job("cron", hour=3, minute=5) 

@@ -18,6 +18,6 @@
    
 git config --global credential.helper store
 
-git remote set-url --add --push origin https://github.com/YiJiuChow/myplugins.git
+git remote set-url --add --push origin https://github.com/elastichow/myplugins.git
 
-git remote set-url --add --push origin https://gitee.com/YiJiuChow/myplugins.git
+git remote set-url --add --push origin https://gitee.com/elastichow/myplugins.git
