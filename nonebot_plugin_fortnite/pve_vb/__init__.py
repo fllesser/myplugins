@@ -50,7 +50,6 @@ async def _():
             break
         except Exception as e:
             logger.error(f"PVE vb图更新错误 {e}")
-            # msg = f"vb图定时更新失败, 错误信息{e}, 请手动更新"
             # ssl错误, 重新更新vb图
             await asyncio.sleep(30)
             continue

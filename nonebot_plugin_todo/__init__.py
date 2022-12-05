@@ -39,7 +39,7 @@ async def _(event: PrivateMessageEvent, args: Message = CommandArg()):
             .append("END")
         )
 
-todo_list = on_command("todolist", priority=1, permission=SUPERUSER, block=True)
+todo_list = on_command("tl", priority=1, permission=SUPERUSER, block=True)
 @todo_list.handle()
 async def _():
     td_list = MyStr()

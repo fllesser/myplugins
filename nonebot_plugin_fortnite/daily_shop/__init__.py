@@ -1,4 +1,3 @@
-from matplotlib.pyplot import get
 from nonebot.plugin import on_command
 
 from utils.utils import scheduler, get_bot
