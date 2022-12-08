@@ -6,6 +6,8 @@ anderson/
 oswald/
 old/
 myplugins/
+nonebot_plugin_todo/
+
 
 test.py
 testutils.py
