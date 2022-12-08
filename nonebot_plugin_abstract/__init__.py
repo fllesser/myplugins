@@ -2,7 +2,7 @@ from nonebot import on_command
 from nonebot.log import logger
 from nonebot.typing import T_State
 from nonebot.adapters.onebot.v11 import Bot, Event, Message
-from nonebot.params import CommandArg, ArgStr, StateParam
+from nonebot.params import CommandArg, ArgStr
 from .data import text_to_emoji
 
 __zx_plugin_name__ = "抽象化语句"

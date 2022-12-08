@@ -53,19 +53,6 @@ __plugin_settings__ = {
     "cmd": ["头像表情包"],
 }
 
-# __plugin_meta__ = PluginMetadata(
-#     name="头像表情包",
-#     description="摸头等头像相关表情制作",
-#     usage="触发方式：指令 + @user/qq/自己/图片\n发送“头像表情包”查看支持的指令",
-#     config=Config,
-#     extra={
-#         "unique_name": "petpet",
-#         "example": "摸 @小Q\n摸 114514\n摸 自己\n摸 [图片]",
-#         "author": "meetwq <meetwq@gmail.com>",
-#         "version": "0.3.15",
-#     },
-# )
-
 PERM_EDIT = GROUP_ADMIN | GROUP_OWNER | PRIVATE_FRIEND | SUPERUSER
 PERM_GLOBAL = SUPERUSER
 
@@ -235,8 +222,10 @@ def create_matchers():
         ).append_handler(handler(meme), parameterless=[split_msg()])
 
     def random_handler() -> T_Handler:
-        def handle(matcher: Matcher):
-            random_meme = random.choice([meme for meme in memes if check_flag(meme)])
+        def handle(matcher: Matcher, user_id: str = get_user_id()):
+            random_meme = random.choice(
+                [meme for meme in memes if meme_manager.check(user_id, meme)]
+            )
             handler_ = Dependent[Any].parse(
                 call=handler(random_meme),
                 parameterless=[split_msg()],
