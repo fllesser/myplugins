@@ -6,11 +6,9 @@ from nonebot import get_driver
 
 from utils.utils import get_message_at, is_number
 from services.log import logger
-from myplugins.myutils.mystr import MyStr
 
 from .data_source import kick_not_active_member, get_kicked_list
 from .model import GroupInfoUserByMe
-
 
 __zx_plugin_name__ = "ban/kick/kugm"
 __plugin_usage__ = """
@@ -24,6 +22,13 @@ usage：
 __plugin_type__ = ("其他",)
 __plugin_cmd__ = ["ban", "kick", "kugm"]
 __plugin_des__ = "ban/kick/kugm"
+
+AUTO_KICK_RULE: str = '''检测到该群人数已满
+当前规则:
+ 1.超过三个月不发言
+ 2.群活跃等级小于20(不太准确)
+ 3.没有头衔(发送 sgst 头衔名 即可授予自己头衔)
+注:三条规则同时满足才有可能被踢'''.strip()
 
 
 driver = get_driver()
@@ -62,16 +67,7 @@ async def _(bot: Bot, event: GroupIncreaseNoticeEvent):
         return
     group_info = await bot.get_group_info(group_id=event.group_id, no_cache=True)
     if group_info["member_count"] == group_info["max_member_count"]:
-        await bot.send_group_msg(
-            message=MyStr()
-                .append_line("检测到该群人数已满")
-                .append_line("开始踢除不活跃用户")
-                .append_line("当前规则:")
-                .append_line(" 1.超过三个月不发言")
-                .append_line(" 2.群活跃等级小于20(不太准确)")
-                .append_line(" 3.没有头衔(发送 sgst 头衔名 即可授予自己头衔)")
-                .append("注:三条规则同时满足才有可能被踢"),
-            group_id=event.group_id)
+        await bot.send_group_msg(message=AUTO_KICK_RULE,group_id=event.group_id)
         message_str = await kick_not_active_member(bot=bot, group_id=event.group_id, kicked_num=10)
         await gm_increase.finish(message=message_str)
 

@@ -5,7 +5,6 @@ from nonebot.adapters.onebot.v11 import Bot
 from services.log import logger
 from utils.utils import scheduler, get_bot
 
-
 __zx_plugin_name__ = "时间群昵称"
 __plugin_version__ = 0.1
 __plugin_author__ = "YiJiuChow"

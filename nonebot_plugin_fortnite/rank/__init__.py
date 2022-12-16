@@ -9,7 +9,6 @@ from utils.utils import is_number, scheduler
 from utils.data_utils import _init_rank_graph
 from configs.path_config import FONT_PATH
 from services.log import logger
-from myplugins.myutils.mystr import MyStr
 
 from fortnite_api import StatsImageType, FortniteAPI, TimeWindow, BrPlayerStats
 from PIL import Image, ImageFont, ImageDraw
@@ -28,15 +27,25 @@ usage：
         bpr 季卡排行/名 卷王排行/名 + 3~50
         dr 删除排行
         群昵称(名片)设置如下(三选一, 不区分大小写):
-            id:Oswald (英文冒号)
-            id：Oswald (中文冒号,无空格)
-            id Oswald (空格)
+            id:你的id (英文冒号)
+            id：你的id (中文冒号,无空格)
+            id 你的id (空格)
         发送 战绩或生涯战绩 可快速查询战绩
 """.strip()
 __plugin_type__ = ("堡批专属",)
 __plugin_cmd__ = ["战绩"]
 __plugin_des__ = "堡垒之夜战绩查询"
 
+SESSON_STAT_NOTICE: str = '''群昵称(名片)设置如下(三选一, 不区分大小写):
+  id:你的id(英文冒号)
+  id：你的id(中文冒号, 无空格)
+  id 你的id(空格)
+发送 战绩 可快速查询战绩'''.strip()
+ALL_STAT_NOTICE: str = '''群昵称(名片)设置如下(三选一, 不区分大小写):
+  id:你的id(英文冒号)
+  id：你的id(中文冒号, 无空格)
+  id 你的id(空格)
+发送 生涯战绩 可快速查询生涯战绩'''.strip()
 
 
 api = FortniteAPI(api_key = "f3f4e682-346e-45b1-8323-fe77aaea2a68", run_async = True)
@@ -70,12 +79,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
         if card is not None and card[0:3].casefold() in ["id:", "id：", "id ",]:
             nickname = card[3:len(card)] # 昵称替换为群名片id
         else:
-            await season_stat.finish(message=MyStr()
-                .append_line("群昵称(名片)设置如下(三选一, 不区分大小写):")
-                .append_line("  id:Oswald(英文冒号)")
-                .append_line("  id：Oswald(中文冒号, 无空格)")
-                .append_line("  id Oswald(空格)")
-                .append("发送 战绩 可快速查询战绩"))
+            await season_stat.finish(message=SESSON_STAT_NOTICE)
     try:
         playerstats = await api.stats.fetch_by_name(nickname, time_window=TimeWindow.SEASON, image=StatsImageType.ALL)
         await update_level(playerstats)
@@ -102,14 +106,9 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     if nickname is None or nickname == '':
         card = event.sender.card 
         if card is not None and card[0:3].casefold() in ["id:", "id：", "id ",]:
-            nickname = card[3:len(card)] # 昵称替换为群名片id
+            nickname = card[3:len(card)] # 昵称为群名片id
         else:
-            await lifetime_stat.finish(message=MyStr()
-                .append_line("群昵称(名片)设置如下(三选一, 不区分大小写):")
-                .append_line("  id:Oswald(英文冒号)")
-                .append_line("  id：Oswald(中文冒号, 无空格)")
-                .append_line("  id Oswald(空格)")
-                .append("发送 生涯战绩 可快速查询生涯战绩"))
+            await lifetime_stat.finish(message=ALL_STAT_NOTICE)
     try:
         playerstats = await api.stats.fetch_by_name(nickname, image=StatsImageType.ALL)
         await update_level(playerstats)

@@ -1,6 +1,5 @@
 import httpx
 import time
-import asyncio
 
 from bs4 import BeautifulSoup
 from PIL import Image, ImageFont
