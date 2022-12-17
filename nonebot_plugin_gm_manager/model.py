@@ -4,7 +4,7 @@ from models.group_member_info import GroupInfoUser
 
 class GroupInfoUserByMe(GroupInfoUser):
 
-    query_start_dict = {"1": 1}
+    # query_start_dict = {"1": 1}
 
     @classmethod
     async def get_group_user_qq_list(cls, group_id: int, user_num: int, off_set: int) -> List[int]:

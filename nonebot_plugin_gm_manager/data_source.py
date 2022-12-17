@@ -6,6 +6,8 @@ from services.log import logger
 
 from .model import GroupInfoUserByMe
 
+query_start_dict: dict = {"1": 1}
+
 async def kick_not_active_member(bot: Bot, group_id: int, kicked_num: int) -> str:
     members = await get_kicked_list(bot=bot, group_id=group_id, kicked_num=kicked_num)
     if members is None or members == []:
@@ -23,10 +25,10 @@ async def get_kicked_list(bot: Bot, group_id: int, kicked_num: int) -> List[Dict
     # 待踢群员列表
     members = []
     # 初始化
-    if GroupInfoUserByMe.query_start_dict.get(str(group_id)) is None:
-        GroupInfoUserByMe.query_start_dict[str(group_id)] = 1
+    if query_start_dict.get(str(group_id)) is None:
+        query_start_dict[str(group_id)] = 1
     now_time = int(time.time())
-    for i in range(GroupInfoUserByMe.query_start_dict[str(group_id)], 20):
+    for i in range(query_start_dict[str(group_id)], 20):
         try:
             gm_list = await GroupInfoUserByMe.get_group_user_qq_list(
                 group_id=group_id,
@@ -47,9 +49,9 @@ async def get_kicked_list(bot: Bot, group_id: int, kicked_num: int) -> List[Dict
                 return members
         logger.info(f"当前查询第{i}页, 已匹配的待踢人数{len(members)}")
         if len(members) == 0:
-            GroupInfoUserByMe.query_start_dict[str(group_id)] += 1
-    if GroupInfoUserByMe.query_start_dict[str(group_id)] == 20:
-        GroupInfoUserByMe.query_start_dict[str(group_id)] = 1
+            query_start_dict[str(group_id)] += 1
+    if query_start_dict[str(group_id)] == 20:
+        query_start_dict[str(group_id)] = 1
 
 def hid_num_4mid(num: int) -> str:
     num = str(num)

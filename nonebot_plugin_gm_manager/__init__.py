@@ -7,7 +7,7 @@ from nonebot import get_driver
 from utils.utils import get_message_at, is_number
 from services.log import logger
 
-from .data_source import kick_not_active_member, get_kicked_list
+from .data_source import kick_not_active_member, get_kicked_list, query_start_dict
 from .model import GroupInfoUserByMe
 
 __zx_plugin_name__ = "ban/kick/kugm"
@@ -36,12 +36,11 @@ driver = get_driver()
 # websocket连接后 初始化query_start
 @driver.on_bot_connect
 async def init_condition(bot: Bot):
-    # g_list = [754044548] # [913941037, 754044548]
+    # g_list = [913941037, 754044548]
     # for g in g_list:
     g = 754044548
     members = await get_kicked_list(bot=bot, group_id=g, kicked_num=1)
-    logger.info(f"群 {g} query_start_dict 初始化完成")
-    logger.info(f"query_start_dict : {GroupInfoUserByMe.query_start_dict}")
+    logger.info(f"群自动清理不活跃群员初始化完成query_start_dict : {query_start_dict}, members : {members}")
 
 # 权限过滤
 permission_filter = on_command(cmd="ban", aliases={"kick", "kugm"}, priority=1)
