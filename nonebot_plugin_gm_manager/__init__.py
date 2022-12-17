@@ -30,7 +30,6 @@ AUTO_KICK_RULE: str = '''检测到该群人数已满
  3.没有头衔(发送 sgst 头衔名 即可授予自己头衔)
 注:三条规则同时满足才有可能被踢'''.strip()
 
-
 driver = get_driver()
 
 # websocket连接后 初始化query_start
@@ -40,7 +39,7 @@ async def init_condition(bot: Bot):
     # for g in g_list:
     g = 754044548
     members = await get_kicked_list(bot=bot, group_id=g, kicked_num=1)
-    logger.info(f"群自动清理不活跃群员初始化完成query_start_dict : {query_start_dict}, members : {members}")
+    logger.info(f"群自动清理不活跃群员初始化完成 query_start_dict : {query_start_dict}, members : {members}")
 
 # 权限过滤
 permission_filter = on_command(cmd="ban", aliases={"kick", "kugm"}, priority=1)
