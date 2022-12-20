@@ -29,14 +29,11 @@ async def get_kicked_list(bot: Bot, group_id: int, kicked_num: int) -> List[Dict
         query_start_dict[str(group_id)] = 1
     now_time = int(time.time())
     for i in range(query_start_dict[str(group_id)], 20):
-        try:
-            gm_list = await GroupInfoUserByMe.get_group_user_qq_list(
-                group_id=group_id,
-                user_num=100,
-                off_set=(i - 1) * 100 + 1
-            )        
-        except:
-            return members
+        gm_list = await GroupInfoUserByMe.get_group_user_qq_list(
+            group_id=group_id,
+            user_num=100,
+            off_set=(i - 1) * 100
+        )        
         for member_qq in gm_list:
             try:
                 member = await bot.get_group_member_info(user_id=member_qq, group_id=group_id, no_cache=True)
@@ -51,9 +48,9 @@ async def get_kicked_list(bot: Bot, group_id: int, kicked_num: int) -> List[Dict
                 return members
         logger.info(f"当前查询第{i}页, 已匹配的待踢人数{len(members)}")
         if len(members) == 0:
-            query_start_dict[str(group_id)] += 1
+            query_start_dict[str(group_id)] += 1 # 下次查询起始页更接近符合规则的
     if query_start_dict[str(group_id)] == 20:
-        query_start_dict[str(group_id)] = 1
+        query_start_dict[str(group_id)] = 1 # 重置
         return members
 
 def hid_num_4mid(num: int) -> str:
