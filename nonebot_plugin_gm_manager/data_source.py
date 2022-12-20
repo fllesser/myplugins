@@ -45,7 +45,7 @@ async def get_kicked_list(bot: Bot, group_id: int, kicked_num: int) -> List[Dict
                 continue
             if ((now_time - int(member["last_sent_time"]) > 7777777) and # 三个月未发言
                 int(member["level"]) <= 1 and # 群活跃等级小于等于20
-                (member["title"] is None or member["title"] == '')): # 群昵称为空
+                (member["title"] is None or member["title"] == '')): # 群头衔为空
                 members.append(member)
             if len(members) == kicked_num:
                 return members
