@@ -32,7 +32,7 @@ async def get_kicked_list(bot: Bot, group_id: int, kicked_num: int) -> List[Dict
         gm_list = await GroupInfoUserByMe.get_group_user_qq_list(
             group_id=group_id,
             user_num=100,
-            off_set=(i - 1) * 100
+            off_set=(i - 1) * 100 + 1
         )        
         for member_qq in gm_list:
             try:
