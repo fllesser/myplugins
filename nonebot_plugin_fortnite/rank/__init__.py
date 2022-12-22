@@ -191,7 +191,7 @@ async def update_level(stat: BrPlayerStats):
     if cache_level is None or cache_level != stat.battle_pass.level:
         bpr[stat.user.name] = stat.battle_pass.level
 
-def check_nickname(item: str, card: str) -> list(str):
+def check_nickname(item: str, card: str) -> tuple[str]:
     if card is not None and card[0:3].casefold() in ["id:", "id：", "id ",]:
         nickname = card[3:len(card)] # 昵称替换为群名片id
         return (nickname, "")
