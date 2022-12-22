@@ -68,10 +68,9 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     try:
         playerstats = await api.stats.fetch_by_name(nickname, time_window=TimeWindow.SEASON, image=StatsImageType.ALL)
         await update_level(playerstats)
-        await battlepass.finish(message=f"{nickname}: Lv{playerstats.battle_pass.level}")
     except Exception as e:
         await battlepass.finish(message=handle_exception(str(e)))
-
+    await battlepass.finish(message=f"{nickname}: Lv{playerstats.battle_pass.level}")
 season_stat = on_command("战绩", block=True)
 @season_stat.handle()
 async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
