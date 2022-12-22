@@ -24,7 +24,7 @@ usage：
     指令：
         战绩 id
         生涯战绩 id
-        bpr 季卡排行/名 卷王排行/名 + 3~50
+        bpr 季卡排行/名 卷王排行/名 卷王榜 + 3~50
         dr 删除排行
         群昵称(名片)设置如下(三选一, 不区分大小写):
             id:你的id (英文冒号)
@@ -36,25 +36,12 @@ __plugin_type__ = ("堡批专属",)
 __plugin_cmd__ = ["战绩"]
 __plugin_des__ = "堡垒之夜战绩查询"
 
-SESSON_STAT_NOTICE: str = '''群昵称(名片)设置如下(三选一, 不区分大小写):
-  id:你的id(英文冒号)
-  id：你的id(中文冒号, 无空格)
-  id 你的id(空格)
-发送 战绩 可快速查询战绩'''.strip()
-ALL_STAT_NOTICE: str = '''群昵称(名片)设置如下(三选一, 不区分大小写):
-  id:你的id(英文冒号)
-  id：你的id(中文冒号, 无空格)
-  id 你的id(空格)
-发送 生涯战绩 可快速查询生涯战绩'''.strip()
-
-
 api = FortniteAPI(api_key = "f3f4e682-346e-45b1-8323-fe77aaea2a68", run_async = True)
 bpr = {} # dict
 file_path = "bpr.json"
 
 with open(file_path, mode='r') as jr:
     bpr = json.load(jr) 
-
 
 # 定时更新季卡等级, 2小时更新一次
 @scheduler.scheduled_job('interval', hours=2)
@@ -70,16 +57,29 @@ async def _():
         jw.write(json.dumps(bpr, indent=4, ensure_ascii=False))
         logger.info("季卡等级更新完毕")
 
+battlepass = on_command("季卡", block=True)
+@battlepass.handle()
+async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
+    nickname = args.extract_plain_text()
+    if nickname is None or nickname == '':
+        _turple = check_nickname("季卡", event.sender.card)
+        if _turple[0] == "": await battlepass.finish(message=_turple[1])
+        nickname = _turple[0]
+    try:
+        playerstats = await api.stats.fetch_by_name(nickname, time_window=TimeWindow.SEASON, image=StatsImageType.ALL)
+        await update_level(playerstats)
+        await battlepass.finish(message=f"{nickname}: Lv{playerstats.battle_pass.level}")
+    except Exception as e:
+        await battlepass.finish(message=handle_exception(str(e)))
+
 season_stat = on_command("战绩", block=True)
 @season_stat.handle()
 async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     nickname = args.extract_plain_text()
     if nickname is None or nickname == '':
-        card = event.sender.card 
-        if card is not None and card[0:3].casefold() in ["id:", "id：", "id ",]:
-            nickname = card[3:len(card)] # 昵称替换为群名片id
-        else:
-            await season_stat.finish(message=SESSON_STAT_NOTICE)
+        _turple = check_nickname("战绩", event.sender.card)
+        if _turple[0] == "": await battlepass.finish(message=_turple[1])
+        nickname = _turple[0]
     try:
         playerstats = await api.stats.fetch_by_name(nickname, time_window=TimeWindow.SEASON, image=StatsImageType.ALL)
         await update_level(playerstats)
@@ -104,11 +104,9 @@ lifetime_stat = on_command("生涯战绩", block=True)
 async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     nickname = args.extract_plain_text()
     if nickname is None or nickname == '':
-        card = event.sender.card 
-        if card is not None and card[0:3].casefold() in ["id:", "id：", "id ",]:
-            nickname = card[3:len(card)] # 昵称为群名片id
-        else:
-            await lifetime_stat.finish(message=ALL_STAT_NOTICE)
+        _turple = check_nickname("生涯战绩", event.sender.card)
+        if _turple[0] == "": await battlepass.finish(message=_turple[1])
+        nickname = _turple[0]
     try:
         playerstats = await api.stats.fetch_by_name(nickname, image=StatsImageType.ALL)
         await update_level(playerstats)
@@ -128,7 +126,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
         result = image(url)
     await lifetime_stat.finish(message=result)
 
-battle_pass_ranking = on_command("bpr", aliases={"季卡排行","季卡排名","卷王排行","卷王排名"}, block=True)
+battle_pass_ranking = on_command("bpr", aliases={"季卡排行","季卡排名","卷王排行","卷王排名","卷王榜"}, block=True)
 @battle_pass_ranking.handle()
 async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     msg = args.extract_plain_text().strip()
@@ -192,3 +190,12 @@ async def update_level(stat: BrPlayerStats):
     cache_level = bpr.get(stat.user.name)
     if cache_level is None or cache_level != stat.battle_pass.level:
         bpr[stat.user.name] = stat.battle_pass.level
+
+def check_nickname(item: str, card: str) -> tuple(str):
+    if card is not None and card[0:3].casefold() in ["id:", "id：", "id ",]:
+        nickname = card[3:len(card)] # 昵称替换为群名片id
+        return (nickname, "")
+    else:
+        return (
+            "", 
+            f"群昵称(名片)设置如下(三选一, 不区分大小写):\n id:你的id(英文冒号)\n id：你的id(中文冒号, 无空格)\n id 你的id(空格)\n发送 {item} 可快速查询{item}")

@@ -1,5 +1,5 @@
 from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message, GroupIncreaseNoticeEvent, GROUP_ADMIN, GROUP_OWNER
-from nonebot import on_command, on_notice
+from nonebot import on_command, on_notice, on_message
 from nonebot.params import CommandArg
 from nonebot.permission import SUPERUSER
 from nonebot import get_driver
@@ -41,8 +41,18 @@ async def init_condition(bot: Bot):
     members = await get_kicked_list(bot=bot, group_id=g, kicked_num=1)
     logger.info(f"群自动清理不活跃群员初始化完成 query_start_dict : {query_start_dict}, members : {members}")
 
+# 中转bot 消息过滤
+# anderson_filter = on_message(priority=1)
+
+# @anderson_filter.handle()
+# async def _(event: GroupMessageEvent):
+#     anderson_filter.block = True
+#     if event.user_id == 501273515:
+#         return
+#     anderson_filter.block = False
+
 # 权限过滤
-permission_filter = on_command(cmd="ban", aliases={"kick", "kugm"}, priority=1)
+permission_filter = on_command(cmd="ban", aliases={"kick", "kugm"}, priority=2)
 
 @permission_filter.handle()
 async def _(bot: Bot, event: GroupMessageEvent):
