@@ -71,6 +71,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     except Exception as e:
         await battlepass.finish(message=handle_exception(str(e)))
     await battlepass.finish(message=f"{nickname}: Lv{playerstats.battle_pass.level}")
+
 season_stat = on_command("战绩", block=True)
 @season_stat.handle()
 async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):

@@ -1,14 +1,14 @@
-from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message, GroupIncreaseNoticeEvent, GROUP_ADMIN, GROUP_OWNER
+from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message, GroupIncreaseNoticeEvent, GROUP_ADMIN, GROUP_OWNER, MessageSegment
 from nonebot import on_command, on_notice, on_message
 from nonebot.params import CommandArg
 from nonebot.permission import SUPERUSER
 from nonebot import get_driver
 
-from utils.utils import get_message_at, is_number
+from utils.utils import is_number
 from services.log import logger
 
 from .data_source import kick_not_active_member, get_kicked_list, query_start_dict
-from .model import GroupInfoUserByMe
+
 
 __zx_plugin_name__ = "ban/kick/kugm"
 __plugin_usage__ = """
@@ -86,7 +86,8 @@ kugm = on_command("kugm", priority=5, permission=SUPERUSER, block=True)
 
 @banuser.handle()
 async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
-    baned_user = get_message_at(event.json())
+    for seg in event.message.get("at"):
+        baned_user = int(seg.get("qq"))
     if baned_user:
         if (await bot.get_group_member_info(group_id=event.group_id, user_id=baned_user[0], no_cache=True))["role"] != "member":
             await kickuser.finish(message="机器人权限不足")
@@ -102,7 +103,8 @@ async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
 
 @kickuser.handle()
 async def _(bot: Bot, event: GroupMessageEvent):
-    kicked_user = get_message_at(event.json())
+    for seg in event.message.get("at"):
+        kicked_user = int(seg.get("qq"))
     if kicked_user:
         if (await bot.get_group_member_info(group_id=event.group_id, user_id=kicked_user[0], no_cache=True))["role"] != "member":
             await kickuser.finish(message="机器人权限不足")
