@@ -162,7 +162,7 @@ def write_chinese_nickname(url: str, nickname: str):
     im = Image.open(BytesIO(response.content))
     draw = ImageDraw.Draw(im)
     # 覆盖
-    draw.rectangle(xy=(30, 90, 420, 230), fill="#012e57")
+    draw.rectangle(xy=(30, 90, 420, 230), fill="#003d5d")
     # 填充昵称
     cn_len = (len(nickname.encode("utf-8")) - len(nickname.encode("GBK")))
     nickname_len = (len(nickname) - cn_len + 0.0) / 2 + cn_len
