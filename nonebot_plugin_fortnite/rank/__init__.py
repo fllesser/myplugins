@@ -51,8 +51,7 @@ async def _():
             stat = await api.stats.fetch_by_name(nickname, image=StatsImageType.ALL)
             await update_level(stat)
         except Exception as e:
-            if "exist" in str(e):
-                del bpr[nickname]
+            if "exist" in str(e): del bpr[nickname]
     with open(file_path, mode='w+') as jw:
         jw.write(json.dumps(bpr, indent=4, ensure_ascii=False))
         logger.info("季卡等级更新完毕")
@@ -62,11 +61,12 @@ battlepass = on_command("季卡", block=True)
 async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     nickname = args.extract_plain_text()
     if nickname is None or nickname == '':
-        _turple = check_nickname("季卡", event.sender.card)
-        if _turple[0] == "": await battlepass.finish(message=_turple[1])
-        nickname = _turple[0]
+        name_reply = check_nickname("季卡", event.sender.card)
+        if name_reply[0] == "": await battlepass.finish(message=name_reply[1])
+        nickname = name_reply[0]
     try:
         playerstats = await api.stats.fetch_by_name(nickname, time_window=TimeWindow.SEASON, image=StatsImageType.ALL)
+        nickname = playerstats.user.name
         await update_level(playerstats)
     except Exception as e:
         await battlepass.finish(message=handle_exception(str(e)))
@@ -77,9 +77,9 @@ season_stat = on_command("战绩", block=True)
 async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     nickname = args.extract_plain_text()
     if nickname is None or nickname == '':
-        _turple = check_nickname("战绩", event.sender.card)
-        if _turple[0] == "": await battlepass.finish(message=_turple[1])
-        nickname = _turple[0]
+        name_reply = check_nickname("战绩", event.sender.card)
+        if name_reply[0] == "": await battlepass.finish(message=name_reply[1])
+        nickname = name_reply[0]
     try:
         playerstats = await api.stats.fetch_by_name(nickname, time_window=TimeWindow.SEASON, image=StatsImageType.ALL)
         await update_level(playerstats)
@@ -104,9 +104,9 @@ lifetime_stat = on_command("生涯战绩", block=True)
 async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     nickname = args.extract_plain_text()
     if nickname is None or nickname == '':
-        _turple = check_nickname("生涯战绩", event.sender.card)
-        if _turple[0] == "": await battlepass.finish(message=_turple[1])
-        nickname = _turple[0]
+        name_reply = check_nickname("生涯战绩", event.sender.card)
+        if name_reply[0] == "": await battlepass.finish(message=name_reply[1])
+        nickname = name_reply[0]
     try:
         playerstats = await api.stats.fetch_by_name(nickname, image=StatsImageType.ALL)
         await update_level(playerstats)
@@ -183,7 +183,7 @@ def handle_exception(e: str) -> str:
         return "该玩家当前赛季没有进行过任何对局"
     elif "timed out" in e:
         return "请求超时, 请稍后再试"
-    return "未做处理的异常: " + e
+    return "未知错误: " + e
 
 # 更新季卡等级
 async def update_level(stat: BrPlayerStats):
