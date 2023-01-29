@@ -89,7 +89,10 @@ gc_modify = on_notice(priority=5)
 async def _(event: GroupCardNoticeEvent):
     if event.user_id in (1942422015, 2412125282):
         return
-    await gc_modify.finish(message=event.card_old + " 修改群昵称为 " + event.card_new)
+    new_card = event.card_new
+    if new_card[0:3].casefold() in ["id:", "id：", "id ",]:
+        new_card += "(昵称符合查询战绩/季卡规则)"
+    await gc_modify.finish(message=event.card_old + " 修改群昵称为 " + new_card)
 
 # 手动命令
 banuser = on_command("ban", priority=5, block=True)
