@@ -108,8 +108,8 @@ async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
         ban_time = 600
         if is_number(msg) and not (int(msg) < 0 or int(msg) > 60 * 24 * 29):
             ban_time = int(msg) * 60
-        await bot.set_group_ban(group_id=event.group_id, user_id=baned_user[0], duration=ban_time)
-        logger.info(f"ban succsess group_id={event.group_id} user_id={baned_user[0]} duration={ban_time}s")
+        await bot.set_group_ban(group_id=event.group_id, user_id=baned_user, duration=ban_time)
+        logger.info(f"ban succsess group_id={event.group_id} user_id={baned_user} duration={ban_time}s")
     else:
         logger.info(f"没有@要禁的人")
         await banuser.finish(message="没有@要禁的人")
@@ -122,9 +122,9 @@ async def _(bot: Bot, event: GroupMessageEvent):
     if kicked_user:
         if (await bot.get_group_member_info(group_id=event.group_id, user_id=kicked_user, no_cache=True))["role"] != "member":
             await kickuser.finish(message="机器人权限不足")
-        await bot.set_group_kick(group_id=event.group_id, user_id=kicked_user[0])
-        logger.info(f"kick success group_id = {event.group_id}, user_id = {kicked_user[0]}")
-        await kickuser.finish(message=f"{kicked_user[0]} 被我送走了")
+        await bot.set_group_kick(group_id=event.group_id, user_id=kicked_user)
+        logger.info(f"kick success group_id = {event.group_id}, user_id = {kicked_user}")
+        await kickuser.finish(message=f"{kicked_user} 被我送走了")
     else:
         logger.info(f"没有@要踢的人")
         await kickuser.finish(message="没有@要踢的人")
