@@ -1,4 +1,6 @@
-from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message, GroupIncreaseNoticeEvent, GROUP_ADMIN, GROUP_OWNER, MessageSegment
+from nonebot.adapters.onebot.v11 import (
+    Bot, GroupMessageEvent, Message, GroupIncreaseNoticeEvent, GROUP_ADMIN, GROUP_OWNER
+)
 from nonebot import on_command, on_notice, on_message
 from nonebot.params import CommandArg
 from nonebot.permission import SUPERUSER
@@ -8,7 +10,7 @@ from utils.utils import is_number
 from services.log import logger
 
 from .data_source import kick_not_active_member, get_kicked_list, query_start_dict
-
+from .class_ import GroupCardNoticeEvent
 
 __zx_plugin_name__ = "ban/kick/kugm"
 __plugin_usage__ = """
@@ -41,6 +43,8 @@ async def init_condition(bot: Bot):
     members = await get_kicked_list(bot=bot, group_id=g, kicked_num=1)
     logger.info(f"群自动清理不活跃群员初始化完成 query_start_dict : {query_start_dict}, members : {members}")
 
+
+
 # 中转bot 消息过滤
 # anderson_filter = on_message(priority=1)
 
@@ -66,7 +70,7 @@ async def _(bot: Bot, event: GroupMessageEvent):
         permission_filter.block = False
 
 # 检测群是否已满, 清理不活跃用户
-gm_increase = on_notice(priority=5, block=False)
+gm_increase = on_notice(priority=5)
 
 @gm_increase.handle()
 async def _(bot: Bot, event: GroupIncreaseNoticeEvent):
@@ -79,6 +83,14 @@ async def _(bot: Bot, event: GroupIncreaseNoticeEvent):
         message_str = await kick_not_active_member(bot=bot, group_id=event.group_id, kicked_num=10)
         await gm_increase.finish(message=message_str)
 
+# 群昵称修改提醒 group card
+gc_modify = on_notice(priority=5)
+@gc_modify.handle()
+async def _(event: GroupCardNoticeEvent):
+    if event.user_id in (1942422015, 2412125282):
+        return
+    await gc_modify.finish(message=event.card_old + " 修改群昵称为 " + event.card_new)
+
 # 手动命令
 banuser = on_command("ban", priority=5, block=True)
 kickuser = on_command("kick", priority=5 , block=True)
@@ -87,7 +99,9 @@ kugm = on_command("kugm", priority=5, permission=SUPERUSER, block=True)
 @banuser.handle()
 async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
     for seg in event.message.get("at"):
-        baned_user = int(seg.get("qq"))
+        baned_user = seg.get("qq")
+        logger.info(baned_user + " type -> " + type(baned_user))
+        baned_user = int(baned_user)
     if baned_user:
         if (await bot.get_group_member_info(group_id=event.group_id, user_id=baned_user[0], no_cache=True))["role"] != "member":
             await kickuser.finish(message="机器人权限不足")
@@ -104,6 +118,7 @@ async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
 @kickuser.handle()
 async def _(bot: Bot, event: GroupMessageEvent):
     for seg in event.message.get("at"):
+
         kicked_user = int(seg.get("qq"))
     if kicked_user:
         if (await bot.get_group_member_info(group_id=event.group_id, user_id=kicked_user[0], no_cache=True))["role"] != "member":
