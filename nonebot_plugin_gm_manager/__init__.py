@@ -100,7 +100,7 @@ kugm = on_command("kugm", priority=5, permission=SUPERUSER, block=True)
 async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
     for seg in event.message.get("at"):
         baned_user = seg.get("qq")
-        logger.info(baned_user + " type -> " + type(baned_user))
+        logger.info("..............." + baned_user)
         baned_user = int(baned_user)
     if baned_user:
         if (await bot.get_group_member_info(group_id=event.group_id, user_id=baned_user[0], no_cache=True))["role"] != "member":
