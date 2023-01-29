@@ -102,7 +102,7 @@ async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
         if seg.type == "at":
             baned_user = seg.data.get("qq", "")
     if baned_user:
-        if (await bot.get_group_member_info(group_id=event.group_id, user_id=baned_user[0], no_cache=True))["role"] != "member":
+        if (await bot.get_group_member_info(group_id=event.group_id, user_id=baned_user, no_cache=True))["role"] != "member":
             await kickuser.finish(message="机器人权限不足")
         msg = arg.extract_plain_text().strip()
         ban_time = 600
@@ -120,7 +120,7 @@ async def _(bot: Bot, event: GroupMessageEvent):
         if seg.type == "at":
             kicked_user = seg.data.get("qq", "")
     if kicked_user:
-        if (await bot.get_group_member_info(group_id=event.group_id, user_id=kicked_user[0], no_cache=True))["role"] != "member":
+        if (await bot.get_group_member_info(group_id=event.group_id, user_id=kicked_user, no_cache=True))["role"] != "member":
             await kickuser.finish(message="机器人权限不足")
         await bot.set_group_kick(group_id=event.group_id, user_id=kicked_user[0])
         logger.info(f"kick success group_id = {event.group_id}, user_id = {kicked_user[0]}")
