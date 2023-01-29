@@ -98,9 +98,8 @@ kugm = on_command("kugm", priority=5, permission=SUPERUSER, block=True)
 
 @banuser.handle()
 async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
-    for seg in event.message.get("at"):
-        baned_user = seg.get("qq")
-        logger.info("..............." + baned_user)
+    for seg in event.get_message().get("at"):
+        baned_user: str = seg.get("qq")
         baned_user = int(baned_user)
     if baned_user:
         if (await bot.get_group_member_info(group_id=event.group_id, user_id=baned_user[0], no_cache=True))["role"] != "member":
@@ -117,9 +116,9 @@ async def _(bot: Bot, event: GroupMessageEvent, arg: Message = CommandArg()):
 
 @kickuser.handle()
 async def _(bot: Bot, event: GroupMessageEvent):
-    for seg in event.message.get("at"):
-
-        kicked_user = int(seg.get("qq"))
+    for seg in event.get_message().get("at"):
+        kicked_user: str = seg.get("qq")
+        kicked_user = int(kicked_user)
     if kicked_user:
         if (await bot.get_group_member_info(group_id=event.group_id, user_id=kicked_user[0], no_cache=True))["role"] != "member":
             await kickuser.finish(message="机器人权限不足")
