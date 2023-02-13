@@ -84,7 +84,7 @@ async def _(bot: Bot, event: GroupIncreaseNoticeEvent):
         await gm_increase.finish(message=message_str)
 
 # 群昵称修改提醒 group card
-gc_modify = on_notice(priority=5)
+gc_modify = on_notice(priority=1)
 @gc_modify.handle()
 async def _(event: GroupCardNoticeEvent):
     if event.user_id in (1942422015, 2412125282):
