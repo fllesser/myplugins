@@ -86,13 +86,13 @@ async def _(bot: Bot, event: GroupIncreaseNoticeEvent):
 # 群昵称修改提醒 group card
 gc_modify = on_notice(priority=1)
 @gc_modify.handle()
-async def _(event: GroupCardNoticeEvent):
+async def _(bot: Bot, event: GroupCardNoticeEvent):
     if event.user_id in (1942422015, 2412125282):
         return
     new_card = event.card_new
     if new_card[0:3].casefold() in ["id:", "id：", "id ",]:
         new_card += "(昵称符合查询战绩/季卡规则)"
-    await gc_modify.finish(message=event.card_old + " 修改群昵称为 " + new_card)
+    await bot.send_group_msg(group_id=event.group_id, message=event.card_old + " 修改群昵称为 " + new_card)
 
 # 手动命令
 banuser = on_command("ban", priority=5, block=True)
