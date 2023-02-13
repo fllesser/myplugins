@@ -1,5 +1,5 @@
 from nonebot.adapters.onebot.v11 import (
-    Bot, GroupMessageEvent, Message, GroupIncreaseNoticeEvent, GROUP_ADMIN, GROUP_OWNER
+    Bot, GroupMessageEvent, NoticeEvent, Message, GroupIncreaseNoticeEvent, GROUP_ADMIN, GROUP_OWNER
 )
 from nonebot import on_command, on_notice, on_message
 from nonebot.params import CommandArg
@@ -10,7 +10,6 @@ from utils.utils import is_number
 from services.log import logger
 
 from .data_source import kick_not_active_member, get_kicked_list, query_start_dict
-from .class_ import GroupCardNoticeEvent
 
 __zx_plugin_name__ = "ban/kick/kugm"
 __plugin_usage__ = """
@@ -86,13 +85,14 @@ async def _(bot: Bot, event: GroupIncreaseNoticeEvent):
 # 群昵称修改提醒 group card
 gc_modify = on_notice(priority=1)
 @gc_modify.handle()
-async def _(bot: Bot, event: GroupCardNoticeEvent):
-    if event.user_id in (1942422015, 2412125282):
-        return
-    new_card = event.card_new
-    if new_card[0:3].casefold() in ["id:", "id：", "id ",]:
-        new_card += "(昵称符合查询战绩/季卡规则)"
-    await bot.send_group_msg(group_id=event.group_id, message=event.card_old + " 修改群昵称为 " + new_card)
+async def _(bot: Bot, event: NoticeEvent):
+    if event.notice_type == "group_card":
+        if event.user_id in (1942422015, 2412125282):
+            return
+        new_card = event.card_new
+        if new_card[0:3].casefold() in ["id:", "id：", "id ",]:
+            new_card += "(昵称符合查询战绩/季卡规则)"
+        await bot.send_group_msg(group_id=event.group_id, message=event.card_old + " 修改群昵称为 " + new_card)
 
 # 手动命令
 banuser = on_command("ban", priority=5, block=True)
