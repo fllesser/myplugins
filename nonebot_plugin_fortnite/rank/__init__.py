@@ -11,6 +11,7 @@ from configs.path_config import FONT_PATH
 from services.log import logger
 
 from fortnite_api import StatsImageType, FortniteAPI, TimeWindow, BrPlayerStats
+## from fortnite_api.errors 
 from PIL import Image, ImageFont, ImageDraw
 from io import BytesIO
 
