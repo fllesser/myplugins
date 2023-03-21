@@ -33,7 +33,8 @@ async def get_kicked_list(bot: Bot, group_id: int, kicked_num: int) -> List[Dict
             group_id=group_id,
             user_num=100,
             off_set=(i - 1) * 100 + 1
-        )        
+        )
+        logger.info(f"gm_list_size: {len(gm_list)}")     
         for member_qq in gm_list:
             try:
                 member = await bot.get_group_member_info(user_id=member_qq, group_id=group_id, no_cache=True)
