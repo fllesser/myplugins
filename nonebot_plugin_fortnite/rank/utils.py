@@ -24,6 +24,7 @@ def _init_rank_graph(
             f"{IMAGE_PATH}/background/create_mat/{x}"
             for x in os.listdir(f"{IMAGE_PATH}/background/create_mat")
         ],
+        font_size= int(22 * (1 - len(_uname_lst) / 100))
         bar_color=["*"],
     )
     image.size = (1200, 1000)

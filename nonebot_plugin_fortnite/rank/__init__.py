@@ -131,10 +131,10 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
 battle_pass_ranking = on_command("bpr", aliases={"季卡排行","季卡排名","卷王排行","卷王排名","卷王榜"}, block=True)
 @battle_pass_ranking.handle()
 async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
-    msg = args.extract_plain_text().strip()
-    top_num = 10 # 排行数, 默认为10
-    if is_number(msg) and (int(msg) >= 3 and int(msg) <= 50):
-        top_num = int(msg)
+    # msg = args.extract_plain_text().strip()
+    top_num = 50 # 排行数, 默认为10
+    # if is_number(msg) and (int(msg) >= 3 and int(msg) <= 50):
+    #     top_num = int(msg)
     # 排序, 按照等级(value)排序, reverse 倒序, 返回一个List[tuple]
     sorted_bpr = sorted(bpr.items(), key = lambda item:item[1])
     if top_num > len(sorted_bpr):
