@@ -17,7 +17,7 @@ class GroupInfoUserByMe(GroupInfoUser):
             off_set: 从哪行开始
         """
         return list(
-            await cls.filter(group_id=group_id).values_list("user_qq", flat=True).limit(user_num).offset(off_set - 1)
+            await cls.filter(group_id=group_id).limit(user_num).offset(off_set - 1).values_list("user_qq", flat=True)
         )
     
     @classmethod
