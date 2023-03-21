@@ -6,7 +6,8 @@ from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message, GROUP_A
 from utils.message_builder import image
 from utils.image_utils import pic2b64
 from utils.utils import is_number, scheduler
-from utils.data_utils import _init_rank_graph
+#from utils.data_utils import _init_rank_graph
+from .utils import _init_rank_graph
 from configs.path_config import FONT_PATH
 from services.log import logger
 
