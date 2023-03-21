@@ -6,7 +6,8 @@ from nonebot.adapters.onebot.v11 import Bot, GroupMessageEvent, Message, GROUP_A
 from utils.message_builder import image
 from utils.image_utils import pic2b64
 from utils.utils import is_number, scheduler
-from utils.data_utils import _init_rank_graph
+## from utils.data_utils import _init_rank_graph
+from .utils import _init_rank_graph
 from configs.path_config import FONT_PATH
 from services.log import logger
 
@@ -141,7 +142,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     # 取出top_num个数据
     sorted_bpr = sorted_bpr[len(sorted_bpr)-top_num: len(sorted_bpr)]
     # bpr_str = "\n".join(f"top{sorted_bpr.index(i)+1} id:{i[0]} level:{i[1]}" for i in sorted_bpr)
-    nn_list = [i[0][0:8] for i in sorted_bpr]
+    nn_list = [i[0] for i in sorted_bpr]
     level_list = [i[1] for i in sorted_bpr]
     im = await asyncio.get_event_loop().run_in_executor(
         None, _init_rank_graph, "季卡排行(查询战绩可收录id)", nn_list, level_list
