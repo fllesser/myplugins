@@ -48,7 +48,6 @@ async def get_kicked_list(bot: Bot, group_id: int, kicked_num: int) -> List[Dict
     
 
 async def _get_kicked_list(bot: Bot, group_id: int, kicked_num: int) -> List[Dict[str, Any]]:
-
     # 待踢群员列表
     members = []
     # 初始化
