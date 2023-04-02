@@ -10,7 +10,7 @@ class GroupInfoUserByMe(GroupInfoUser):
     async def get_group_user_qq_list(cls, group_id: int, user_num: int, off_set: int) -> List[int]:
         """
         说明:
-            获取该群指定数量用户qq
+            获取 
         参数:
             param group_id: 群号
             user_num: 要获取的用户qq数量

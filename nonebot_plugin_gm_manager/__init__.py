@@ -34,19 +34,16 @@ AUTO_KICK_RULE: str = '''检测到该群人数已满
 driver = get_driver()
 
 # websocket连接后 初始化query_start
-@driver.on_bot_connect
-async def init_condition(bot: Bot):
-    # g_list = [913941037, 754044548]
-    # for g in g_list:
-    g = 754044548
-    members = await get_kicked_list(bot=bot, group_id=g, kicked_num=1)
-    logger.info(f"群自动清理不活跃群员初始化完成 query_start_dict : {query_start_dict}, members : {members}")
-
-
+# @driver.on_bot_connect
+# async def init_condition(bot: Bot):
+#     # g_list = [913941037, 754044548]
+#     # for g in g_list:
+#     g = 754044548
+#     members = await get_kicked_list(bot=bot, group_id=g, kicked_num=1)
+#     logger.info(f"群自动清理不活跃群员初始化完成 query_start_dict : {query_start_dict}, members : {members}")
 
 # 中转bot 消息过滤
 # anderson_filter = on_message(priority=1)
-
 # @anderson_filter.handle()
 # async def _(event: GroupMessageEvent):
 #     anderson_filter.block = True

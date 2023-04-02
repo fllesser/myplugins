@@ -5,6 +5,7 @@ from typing import Dict, List, Any
 from services.log import logger
 
 from .model import GroupInfoUserByMe
+from models.group_member_info import GroupInfoUser
 
 query_start_dict: dict = {"1": 1}
 
@@ -22,6 +23,32 @@ async def kick_not_active_member(bot: Bot, group_id: int, kicked_num: int) -> st
     return message_str + "通通被我送走了捏"
 
 async def get_kicked_list(bot: Bot, group_id: int, kicked_num: int) -> List[Dict[str, Any]]:
+    # 待踢群员列表
+    members = []
+    # 初始化
+    now_time = int(time.time())
+    gm_set = await GroupInfoUser.get_group_member_id_list(group_id=group_id)
+    logger.info(f"gm_list_size: {len(gm_set)}")
+    count = 0   
+    for member_qq in gm_set:
+        try:
+            member = await bot.get_group_member_info(user_id=member_qq, group_id=group_id, no_cache=True)
+            count+=1
+            if (count % 100 == 0):
+                logger.info(f"遍历到第{count}个, 已匹配的待踢人数{len(members)}")
+        except:
+            await GroupInfoUserByMe.delete_member_info(user_qq=member_qq, group_id=group_id)
+            continue
+        if ((now_time - int(member["last_sent_time"]) > 7777777) and # 三个月未发言
+            int(member["level"]) <= 1 and # 群活跃等级小于等于20
+            (member["title"] is None or member["title"] == '')): # 群头衔为空
+            members.append(member)
+        if len(members) == kicked_num:
+            return members
+    
+
+async def _get_kicked_list(bot: Bot, group_id: int, kicked_num: int) -> List[Dict[str, Any]]:
+
     # 待踢群员列表
     members = []
     # 初始化
