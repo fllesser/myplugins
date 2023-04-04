@@ -152,12 +152,12 @@ battle_pass_all_ranking = on_command("卷王总榜", aliases={"季卡总榜"}, b
 @battle_pass_all_ranking.handle()
 async def _(bot: Bot, event: GroupMessageEvent):
     sorted_bpr = sorted(bpr.items(), key = lambda item:item[1])
-    all_ranking = ""
+    msg_list = []
     count = 1
     for i in sorted_bpr:
-        all_ranking += f"{count} {i[0]} {i[1]}\n"
+        msg_list.append(Message(f"{count} {i[0]} {i[1]}\n"))
         count += 1
-    await battle_pass_all_ranking.finish(message=all_ranking)
+    await bot.send_group_forward_msg(group_id=event.group_id, messages=msg_list)
 
 del_ranking = on_command("dr", block=True)
 @del_ranking.handle()
