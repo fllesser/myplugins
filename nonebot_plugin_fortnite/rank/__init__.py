@@ -151,13 +151,13 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
 battle_pass_all_ranking = on_command("卷王总榜", aliases={"季卡总榜"}, block=True)
 @battle_pass_all_ranking.handle()
 async def _(bot: Bot, event: GroupMessageEvent):
-    sorted_bpr = sorted(bpr.items(), key = lambda item:item[1])
+    sorted_bpr = sorted(bpr.items(), key = lambda item:item[1], reverse=True)
     msg_list = []
     count = 1
     all_num = len(sorted_bpr)
     _message = ""
     for i in sorted_bpr:
-        _message += f"{count} {i[0]} {i[1]}"
+        _message += f"{count} {i[0]} {i[1]}\n"
         count += 1
         if (count % 10 == 0 or count == all_num):
             data = {
