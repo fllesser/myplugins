@@ -127,7 +127,7 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
         result = image(url)
     await lifetime_stat.finish(message=result)
 
-battle_pass_ranking = on_command("bpr", aliases={"季卡排行","季卡排名","卷王排行","卷王排名","卷王榜"}, block=True)
+battle_pass_ranking = on_command("bpr", aliases={"季卡排行","季卡排名","卷王排行","卷王排名"}, block=True)
 @battle_pass_ranking.handle()
 async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
     # msg = args.extract_plain_text().strip()
@@ -147,6 +147,16 @@ async def _(bot: Bot, event: GroupMessageEvent, args: Message = CommandArg()):
         None, _init_rank_graph, "季卡排行(查询战绩可收录id)", nn_list, level_list
     )
     await battle_pass_ranking.finish(message=image(b64=im.pic2bs4()))
+
+battle_pass_all_ranking = on_command("卷王总榜", aliases={"季卡总榜"}, block=True)
+@battle_pass_all_ranking.handle()
+async def _(bot: Bot, event: GroupMessageEvent):
+    sorted_bpr = sorted(bpr.items(), key = lambda item:item[1])
+    all_ranking = ""
+    count = 0
+    for i in sorted_bpr:
+        all_ranking += ++count + " " + i[0] + " " + i[1] + "\n"
+    await battle_pass_all_ranking.finish(message=all_ranking)
 
 del_ranking = on_command("dr", block=True)
 @del_ranking.handle()
