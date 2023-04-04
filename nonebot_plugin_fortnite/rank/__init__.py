@@ -159,7 +159,7 @@ async def _(bot: Bot, event: GroupMessageEvent):
     _message = ""
     for i in sorted_bpr:
         count += 1
-        _message += f"{count} {i[0]} {i[1]}\n"
+        _message += f"{count} {i[0]} {i[1]}"
         if count % 10 == 0:
             data = {
                     "type": "node",
@@ -183,6 +183,7 @@ async def _(bot: Bot, event: GroupMessageEvent):
             _message = ""
             msg_list.append(data)
         else:
+            _message += "\n"
             continue 
     await bot.send_group_forward_msg(group_id=event.group_id, messages=msg_list)
 
