@@ -155,7 +155,7 @@ async def _(bot: Bot, event: GroupMessageEvent):
     all_ranking = ""
     count = 1
     for i in sorted_bpr:
-        all_ranking += count + " " + i[0] + " " + i[1] + "\n"
+        all_ranking += str(count) + " " + i[0] + " " + i[1] + "\n"
         count += 1
     await battle_pass_all_ranking.finish(message=all_ranking)
 
