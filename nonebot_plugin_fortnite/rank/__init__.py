@@ -153,9 +153,10 @@ battle_pass_all_ranking = on_command("卷王总榜", aliases={"季卡总榜"}, b
 async def _(bot: Bot, event: GroupMessageEvent):
     sorted_bpr = sorted(bpr.items(), key = lambda item:item[1])
     all_ranking = ""
-    count = 0
+    count = 1
     for i in sorted_bpr:
-        all_ranking += ++count + " " + i[0] + " " + i[1] + "\n"
+        all_ranking += count + " " + i[0] + " " + i[1] + "\n"
+        count += 1
     await battle_pass_all_ranking.finish(message=all_ranking)
 
 del_ranking = on_command("dr", block=True)
