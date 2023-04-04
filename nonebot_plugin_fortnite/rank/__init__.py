@@ -155,6 +155,7 @@ async def _(bot: Bot, event: GroupMessageEvent):
     msg_list = []
     count = 1
     all_num = len(sorted_bpr)
+    _message = ""
     for i in sorted_bpr:
         _message += f"{count} {i[0]} {i[1]}"
         count += 1
