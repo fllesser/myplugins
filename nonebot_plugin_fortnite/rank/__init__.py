@@ -25,7 +25,8 @@ usage：
     指令：
         战绩 id
         生涯战绩 id
-        bpr 季卡排行/名 卷王排行/名 卷王榜 + 3~50
+        bpr 季卡排行/名 卷王排行/名 + 3~50
+        卷王总榜
         dr 删除排行
         群昵称(名片)设置如下(三选一, 不区分大小写):
             id:你的id (英文冒号)
@@ -153,17 +154,17 @@ battle_pass_all_ranking = on_command("卷王总榜", aliases={"季卡总榜"}, b
 async def _(bot: Bot, event: GroupMessageEvent):
     sorted_bpr = sorted(bpr.items(), key = lambda item:item[1], reverse=True)
     msg_list = []
-    count = 1
+    count = 0
     all_num = len(sorted_bpr)
     _message = ""
     for i in sorted_bpr:
-        _message += f"{count} {i[0]} {i[1]}\n"
         count += 1
+        _message += f"{count} {i[0]} {i[1]}\n"
         if (count % 10 == 0 or count == all_num):
             data = {
                     "type": "node",
                     "data": {
-                        "name": f"这里是大头酱",
+                        "name": f"前 {count - 9} ~ {count} 名",
                         "uin": f"{bot.self_id}",
                         "content": _message ,
                     },
