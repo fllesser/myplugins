@@ -157,7 +157,6 @@ async def _(bot: Bot, event: GroupMessageEvent):
     for i in sorted_bpr:
         all_ranking += f"{count} {i[0]} {i[1]}\n"
         count += 1
-    all_ranking -= "\n"
     await battle_pass_all_ranking.finish(message=all_ranking)
 
 del_ranking = on_command("dr", block=True)
