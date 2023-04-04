@@ -160,11 +160,22 @@ async def _(bot: Bot, event: GroupMessageEvent):
     for i in sorted_bpr:
         count += 1
         _message += f"{count} {i[0]} {i[1]}\n"
-        if (count % 10 == 0 or count == all_num):
+        if count % 10 == 0:
             data = {
                     "type": "node",
                     "data": {
                         "name": f"前 {count - 9} ~ {count} 名",
+                        "uin": f"{bot.self_id}",
+                        "content": _message ,
+                    },
+                }
+            _message = ""
+            msg_list.append(data)
+        elif count == all_num:
+            data = {
+                    "type": "node",
+                    "data": {
+                        "name": f"前 {count - (all_num % 10 - 1)} ~ {count} 名",
                         "uin": f"{bot.self_id}",
                         "content": _message ,
                     },
