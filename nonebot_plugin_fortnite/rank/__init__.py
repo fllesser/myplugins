@@ -154,17 +154,23 @@ async def _(bot: Bot, event: GroupMessageEvent):
     sorted_bpr = sorted(bpr.items(), key = lambda item:item[1])
     msg_list = []
     count = 1
+    all_num = len(sorted_bpr)
     for i in sorted_bpr:
-        data = {
-                "type": "node",
-                "data": {
-                    "name": f"这里是大头酱",
-                    "uin": f"{bot.self_id}",
-                    "content": f"{count} {i[0]} {i[1]}",
-                },
-            }
-        msg_list.append(data)
+        _message += f"{count} {i[0]} {i[1]}"
         count += 1
+        if (count % 10 == 0 or count == all_num):
+            data = {
+                    "type": "node",
+                    "data": {
+                        "name": f"这里是大头酱",
+                        "uin": f"{bot.self_id}",
+                        "content": _message ,
+                    },
+                }
+            _message = ""
+            msg_list.append(data)
+        else:
+            continue 
     await bot.send_group_forward_msg(group_id=event.group_id, messages=msg_list)
 
 del_ranking = on_command("dr", block=True)
