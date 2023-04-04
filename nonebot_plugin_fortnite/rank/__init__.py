@@ -155,7 +155,15 @@ async def _(bot: Bot, event: GroupMessageEvent):
     msg_list = []
     count = 1
     for i in sorted_bpr:
-        msg_list.append(Message(f"{count} {i[0]} {i[1]}"))
+        data = {
+                "type": "node",
+                "data": {
+                    "name": f"这里是大头酱",
+                    "uin": f"{bot.self_id}",
+                    "content": f"{count} {i[0]} {i[1]}",
+                },
+            }
+        msg_list.append(data)
         count += 1
     await bot.send_group_forward_msg(group_id=event.group_id, messages=msg_list)
 
