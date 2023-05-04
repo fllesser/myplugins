@@ -223,6 +223,8 @@ def handle_exception(e: str) -> str:
         return "该玩家当前赛季没有进行过任何对局"
     elif "timed out" in e:
         return "请求超时, 请稍后再试"
+    elif "failed to fetch" in e:
+        return "拉取账户信息失败, 稍后再试"
     return "未知错误: " + e
 
 # 更新季卡等级
