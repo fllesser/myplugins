@@ -31,6 +31,7 @@ async def _():
     await pve.finish(message=image(IMAGE_PATH / "fn_stw.png"))
 
 update_pve = on_command("更新vb图", block=True, permission=SUPERUSER)
+
 @update_pve.handle()
 async def _(bot: Bot, event: GroupMessageEvent):
     img_name = await update_daily_vb()
@@ -57,5 +58,6 @@ async def _():
     gl = await bot.get_group_list()
     gl = [g["group_id"] for g in gl]
     for g in gl:
-        if await group_manager.check_group_task_status(g, 'pve'):
-            await bot.send_group_msg(group_id=g, message=msg) 
+        if group_manager.check_group_task_status(g, 'pve'):
+            await bot.send_group_msg(group_id=g, message=msg)
+        
