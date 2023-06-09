@@ -20,7 +20,7 @@ __plugin_des__ = "堡垒之夜每日商城"
 __plugin_task__ = {"fn":"堡垒之夜商城推送"}
 
 
-zhenxun_path = "/home/ubuntu/datou/zhenxun_bot"
+shop_path = "/home/ubuntu/datou/zhenxun_bot/resources/image/shop.png"
 
 @scheduler.scheduled_job(
     "cron",
@@ -42,7 +42,7 @@ async def shopupshop():
 shopshop = on_command("商城", priority=5, block=True)    
 @shopshop.handle()
 async def _():
-    await shopshop.finish(message=image(file=f"file://{zhenxun_path}/shop.png"))
+    await shopshop.finish(message=image(file="shop.png"))
 
 
 updateshop = on_command("更新商城", priority=5, block=True)
@@ -53,7 +53,7 @@ async def _():
 
 def update_dailyshop():
     resp = httpx.get(url= "https://cdn.dingpanbao.cn/blzy/shop.png")
-    with open("shop.png", "wb") as f:
+    with open(shop_path, "wb") as f:
         f.write(resp.content)
-    result = image(file=f"file://{zhenxun_path}/shop.png")
+    result = image(file="shop.png")
     return result
