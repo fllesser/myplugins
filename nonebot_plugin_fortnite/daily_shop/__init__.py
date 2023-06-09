@@ -1,5 +1,5 @@
 from nonebot.plugin import on_command
-
+from nonebot.permission import SUPERUSER
 from utils.utils import scheduler, get_bot
 from utils.manager import group_manager
 from utils.message_builder import image
@@ -45,7 +45,7 @@ async def _():
     await shopshop.finish(message=image(file="shop.png"))
 
 
-updateshop = on_command("更新商城", priority=5, block=True)
+updateshop = on_command("更新商城", priority=5, block=True, permission=SUPERUSER)
 @updateshop.handle()
 async def _():
     result = update_dailyshop()
