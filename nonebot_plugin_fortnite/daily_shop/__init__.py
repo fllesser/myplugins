@@ -5,6 +5,8 @@ from utils.manager import group_manager
 from utils.message_builder import image
 from services.log import logger
 
+import os, httpx
+
 __zx_plugin_name__ = "商城"
 __plugin_usage__ = """
 usage：
@@ -17,6 +19,9 @@ __plugin_cmd__ = ["商城"]
 __plugin_des__ = "堡垒之夜每日商城"
 __plugin_task__ = {"fn":"堡垒之夜商城推送"}
 
+
+zhenxun_path = "/home/ubuntu/datou/zhenxun_bot"
+
 @scheduler.scheduled_job(
     "cron",
     hour=8,
@@ -27,7 +32,7 @@ async def shopupshop():
         bot = get_bot()
         gl = await bot.get_group_list()
         gl = [g["group_id"] for g in gl]
-        result = get_dailyshop()
+        result = update_dailyshop()
         for g in gl:
             if group_manager.check_group_task_status(g, 'fn'):
                 await bot.send_group_msg(group_id=g, message=result) 
@@ -37,11 +42,18 @@ async def shopupshop():
 shopshop = on_command("商城", priority=5, block=True)    
 @shopshop.handle()
 async def _():
-    result = get_dailyshop()
-    await shopshop.finish(message=result)
+    await shopshop.finish(message=image(file=f"file://{zhenxun_path}/shop.png"))
 
-def get_dailyshop():
-    result = image("https://cdn.dingpanbao.cn/blzy/shop.png")
-    if result is None or result == "":
-        result = "堡垒皮肤api请求超时"
+
+updateshop = on_command("更新商城", priority=5, block=True)
+@updateshop.handle()
+async def _():
+    result = update_dailyshop()
+    await updateshop.finish(message="手动更新商城成功" + result)
+
+def update_dailyshop():
+    resp = httpx.get(url= "https://cdn.dingpanbao.cn/blzy/shop.png")
+    with open("shop.png", "wb") as f:
+        f.write(resp.content)
+    result = image(file=f"file://{zhenxun_path}/shop.png")
     return result
