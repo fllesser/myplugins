@@ -5,7 +5,7 @@ from utils.manager import group_manager
 from utils.message_builder import image
 from services.log import logger
 
-import os, httpx
+import os, httpx, asyncio
 
 __zx_plugin_name__ = "商城"
 __plugin_usage__ = """
@@ -25,19 +25,25 @@ shop_path = "/home/ubuntu/datou/zhenxun_bot/resources/image/shop.png"
 @scheduler.scheduled_job(
     "cron",
     hour=8,
-    minute=2,
+    minute=1,
 )
 async def shopupshop():
-    try:
-        bot = get_bot()
-        gl = await bot.get_group_list()
-        gl = [g["group_id"] for g in gl]
-        result = update_dailyshop()
-        for g in gl:
-            if group_manager.check_group_task_status(g, 'fn'):
-                await bot.send_group_msg(group_id=g, message=result) 
-    except Exception as e:
-        logger.error(f"堡垒之夜商城错误 {e}")
+    while True:
+        try:
+            result = update_dailyshop()
+            break
+        except Exception as e:
+            logger.error(f"商城更新错误 {e}")
+            # 网络错误, 重新更新
+            await asyncio.sleep(30)
+            continue
+    bot = get_bot()
+    gl = await bot.get_group_list()
+    gl = [g["group_id"] for g in gl]
+    for g in gl:
+        if group_manager.check_group_task_status(g, 'fn'):
+            await bot.send_group_msg(group_id=g, message=result) 
+
 
 shopshop = on_command("商城", priority=5, block=True)    
 @shopshop.handle()
