@@ -52,7 +52,7 @@ async def _():
         except Exception as e:
             logger.error(f"PVE vb图更新错误 {e}")
             # ssl错误, 重新更新vb图
-            await asyncio.sleep(30)
+            await asyncio.sleep(10)
             continue
     bot = get_bot()
     gl = await bot.get_group_list()

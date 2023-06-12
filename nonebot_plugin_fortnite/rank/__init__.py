@@ -15,7 +15,7 @@ from fortnite_api import StatsImageType, FortniteAPI, TimeWindow, BrPlayerStats
 from PIL import Image, ImageFont, ImageDraw
 from io import BytesIO
 
-import httpx, re, json, asyncio
+import httpx, re, json, asyncio, time
 
 __zx_plugin_name__ = "战绩"
 __plugin_usage__ = """
@@ -154,6 +154,16 @@ battle_pass_all_ranking = on_command("卷王总榜", aliases={"季卡总榜"}, b
 async def _(bot: Bot, event: GroupMessageEvent):
     sorted_bpr = sorted(bpr.items(), key = lambda item:item[1], reverse=True)
     msg_list = []
+    # update_time = time.strftime("%y-%m-%d %H:%M", time.localtime())
+    # first_data = {
+    #     "type": "node",
+    #     "data": {
+    #         "name": f"更新时间: {update_time}",
+    #         "uin": f"{bot.self_id}",
+    #         "content": _message ,
+    #     },
+    # }
+    # msg_list.append(first_data)
     count = 0
     all_num = len(sorted_bpr)
     _message = ""

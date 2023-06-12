@@ -4,6 +4,7 @@ from utils.utils import scheduler, get_bot
 from utils.manager import group_manager
 from utils.message_builder import image
 from services.log import logger
+from configs.path_config import IMAGE_PATH
 
 import os, httpx, asyncio
 
@@ -35,7 +36,7 @@ async def shopupshop():
         except Exception as e:
             logger.error(f"商城更新错误 {e}")
             # 网络错误, 重新更新
-            await asyncio.sleep(30)
+            await asyncio.sleep(10)
             continue
     bot = get_bot()
     gl = await bot.get_group_list()
