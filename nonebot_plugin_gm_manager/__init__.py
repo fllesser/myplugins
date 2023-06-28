@@ -123,7 +123,7 @@ async def _(bot: Bot, event: GroupMessageEvent):
     if kicked_user:
         if (await bot.get_group_member_info(group_id=event.group_id, user_id=kicked_user, no_cache=True))["role"] != "member":
             await kickuser.finish(message="机器人权限不足")
-        await bot.set_group_kick(group_id=event.group_id, user_id=kicked_user)
+        await bot.set_group_kick(group_id=event.group_id, user_id=kicked_user, reject_add_request=True)
         logger.info(f"kick success group_id = {event.group_id}, user_id = {kicked_user}")
         await kickuser.finish(message=f"{kicked_user} 被我送走了")
     else:
