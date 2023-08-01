@@ -14,7 +14,7 @@ from configs.path_config import IMAGE_PATH
 
 async def update_daily_vb() -> str:
     url = "https://freethevbucks.com/timed-missions/"
-    async with httpx.AsyncClient as client:
+    async with httpx.AsyncClient() as client:
         free_resp = await client.get(url)
         ele_resp = await client.get("https://img.icons8.com/office/30/000000/lightning-bolt.png")
     soup = BeautifulSoup(free_resp.content, "lxml")
@@ -33,7 +33,7 @@ async def update_daily_vb() -> str:
     for item in soup.find_all("p"):
         if item.span is not None and item.span.b is not None:
             storm_src = item.img.get("src")  # 风暴图标链接
-            async with httpx.AsyncClient as client:
+            async with httpx.AsyncClient() as client:
                 resp = await client.get(storm_src)
             storm_img = Image.open(BytesIO(storm_img.content))
             await img.apaste(img=storm_img, pos=(40, Y), alpha=True)  # 风暴图标

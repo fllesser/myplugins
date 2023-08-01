@@ -59,7 +59,7 @@ async def _():
     await updateshop.finish(message="手动更新商城成功" + result)
 
 async def update_dailyshop():
-    async with httpx.AsyncClient as client:
+    async with httpx.AsyncClient() as client:
         response = await client.get(url= "https://cdn.dingpanbao.cn/blzy/shop.png")
     with open(shop_path, "wb") as f:
         f.write(response.content)
