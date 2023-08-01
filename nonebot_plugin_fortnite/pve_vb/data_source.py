@@ -15,11 +15,11 @@ from configs.path_config import IMAGE_PATH
 async def update_daily_vb() -> str:
     url = "https://freethevbucks.com/timed-missions/"
     async with httpx.AsyncClient as client:
-        html_content = await client.get(url).content
-        ele_content = await client.get("https://img.icons8.com/office/30/000000/lightning-bolt.png").content
-    soup = BeautifulSoup(html_content, "lxml")
+        free_resp = await client.get(url)
+        ele_resp = await client.get("https://img.icons8.com/office/30/000000/lightning-bolt.png")
+    soup = BeautifulSoup(free_resp.content, "lxml")
     # 电力图标
-    ele_img = Image.open(BytesIO(ele_content))
+    ele_img = Image.open(BytesIO(ele_resp.content))
     ele_img = ele_img.resize((20, 20), Image.LANCZOS)
     # TODO 准备加一个vb图标
     # vb_icon = Image.open(BytesIO(httpx.get().content))
@@ -33,8 +33,9 @@ async def update_daily_vb() -> str:
     for item in soup.find_all("p"):
         if item.span is not None and item.span.b is not None:
             storm_src = item.img.get("src")  # 风暴图标链接
-            storm_img = httpx.get(storm_src).content
-            storm_img = Image.open(BytesIO(storm_img))
+            async with httpx.AsyncClient as client:
+                resp = await client.get(storm_src)
+            storm_img = Image.open(BytesIO(storm_img.content))
             await img.apaste(img=storm_img, pos=(40, Y), alpha=True)  # 风暴图标
             # 电力
             await img.atext(text=item.b.string, pos=(70, Y-3), fill=(255, 255, 255))
