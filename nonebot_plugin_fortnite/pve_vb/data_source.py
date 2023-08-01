@@ -33,8 +33,7 @@ async def update_daily_vb() -> str:
     for item in soup.find_all("p"):
         if item.span is not None and item.span.b is not None:
             storm_src = item.img.get("src")  # 风暴图标链接
-            async with httpx.AsyncClient as client:
-                storm_img = await client.get(storm_src).content
+            storm_img = httpx.get(storm_src).content
             storm_img = Image.open(BytesIO(storm_img))
             await img.apaste(img=storm_img, pos=(40, Y), alpha=True)  # 风暴图标
             # 电力
