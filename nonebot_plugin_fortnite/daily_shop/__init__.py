@@ -55,12 +55,13 @@ async def _():
 updateshop = on_command("更新商城", priority=5, block=True, permission=SUPERUSER)
 @updateshop.handle()
 async def _():
-    result = update_dailyshop()
+    result = await update_dailyshop()
     await updateshop.finish(message="手动更新商城成功" + result)
 
-def update_dailyshop():
-    resp = httpx.get(url= "https://cdn.dingpanbao.cn/blzy/shop.png")
+async def update_dailyshop():
+    async with httpx.AsyncClient as client:
+        response = await client.get(url= "https://cdn.dingpanbao.cn/blzy/shop.png")
     with open(shop_path, "wb") as f:
-        f.write(resp.content)
+        f.write(response.content)
     result = image(file="shop.png")
     return result
