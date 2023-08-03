@@ -26,7 +26,7 @@ shop_path = "/home/ubuntu/datou/zhenxun_bot/resources/image/shop.png"
 @scheduler.scheduled_job(
     "cron",
     hour=8,
-    minute=3,
+    minute=2,
 )
 async def shopupshop():
     while True:

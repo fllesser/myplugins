@@ -35,7 +35,7 @@ async def update_daily_vb() -> str:
             storm_src = item.img.get("src")  # 风暴图标链接
             async with httpx.AsyncClient() as client:
                 resp = await client.get(storm_src)
-            storm_img = Image.open(BytesIO(storm_img.content))
+            storm_img = Image.open(BytesIO(resp.content))
             await img.apaste(img=storm_img, pos=(40, Y), alpha=True)  # 风暴图标
             # 电力
             await img.atext(text=item.b.string, pos=(70, Y-3), fill=(255, 255, 255))
