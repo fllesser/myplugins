@@ -31,7 +31,7 @@ shop_path = "/home/ubuntu/datou/zhenxun_bot/resources/image/shop.png"
 async def shopupshop():
     while True:
         try:
-            result = update_dailyshop()
+            result = await update_dailyshop()
             break
         except Exception as e:
             logger.error(f"商城更新错误 {e}")

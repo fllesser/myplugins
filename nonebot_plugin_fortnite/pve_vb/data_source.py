@@ -21,8 +21,6 @@ async def update_daily_vb() -> str:
     # 电力图标
     ele_img = Image.open(BytesIO(ele_resp.content))
     ele_img = ele_img.resize((20, 20), Image.LANCZOS)
-    # TODO 准备加一个vb图标
-    # vb_icon = Image.open(BytesIO(httpx.get().content))
     # vb图
     img = BuildImage(w=256, h=200, font_size=15,
                     color=(36, 44, 68), font="gorga.otf")
@@ -38,9 +36,9 @@ async def update_daily_vb() -> str:
             storm_img = Image.open(BytesIO(resp.content))
             await img.apaste(img=storm_img, pos=(40, Y), alpha=True)  # 风暴图标
             # 电力
-            await img.atext(text=item.b.string, pos=(70, Y-3), fill=(255, 255, 255))
-            await img.apaste(img=ele_img, pos=(100, Y+1), alpha=True)  # 电力图标
-            await img.atext(pos=(130, Y-3), text=item.span.text, fill=(255, 255, 255))
+            await img.atext(text=item.b.string, pos=(70, Y - 3), fill=(255, 255, 255))
+            await img.apaste(img=ele_img, pos=(100, Y + 1), alpha=True)  # 电力图标
+            await img.atext(pos=(130, Y - 3), text=item.span.text, fill=(255, 255, 255))
             Y += 30
     if Y == 30:
         img.font = ImageFont.truetype(str(FONT_PATH / "HWXingKai.ttf"), 30)
