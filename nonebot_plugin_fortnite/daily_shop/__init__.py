@@ -35,7 +35,6 @@ async def shopupshop():
             break
         except Exception as e:
             logger.error(f"商城更新错误 {e}")
-            # 网络错误, 重新更新
             await asyncio.sleep(10)
             continue
     bot = get_bot()

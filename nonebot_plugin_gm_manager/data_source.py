@@ -68,7 +68,7 @@ async def _get_kicked_list(bot: Bot, group_id: int, kicked_num: int) -> List[Dic
                 await GroupInfoUserByMe.delete_member_info(user_qq=member_qq, group_id=group_id)
                 continue
             if ((now_time - int(member["last_sent_time"]) > 7777777) and # 三个月未发言
-                int(member["level"]) <= 1 and # 群活跃等级小于等于20
+                int(member["level"]) <= 1 and # 群活跃等级
                 (member["title"] is None or member["title"] == '')): # 群头衔为空
                 members.append(member)
             if len(members) == kicked_num:
