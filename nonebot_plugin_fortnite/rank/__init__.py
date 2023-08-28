@@ -53,7 +53,8 @@ async def _():
             stat = await api.stats.fetch_by_name(nickname, image=StatsImageType.ALL)
             await update_level(stat)
         except Exception as e:
-            if "exist" in str(e): del bpr[nickname]
+            e = str(e)
+            if "exist" in e or "public" in e: del bpr[nickname]
     with open(file_path, mode='w+') as jw:
         jw.write(json.dumps(bpr, indent=4, ensure_ascii=False))
         logger.info("季卡等级更新完毕")
@@ -197,7 +198,7 @@ async def _(bot: Bot, event: GroupMessageEvent):
             continue 
     await bot.send_group_forward_msg(group_id=event.group_id, messages=msg_list)
 
-del_ranking = on_command("dr", block=True)
+del_ranking = on_command("dr", block=True, permission=SUPERUSER)
 @del_ranking.handle()
 async def _(args: Message = CommandArg()):
     regex_str = args.extract_plain_text().strip()
