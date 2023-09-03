@@ -12,11 +12,14 @@ __plugin_author__ = "YiJiuChow"
 
 # lz_list = ["绿头鸡", "鸡脖哥", "鸡脖王", "鸡脖哥哥"]
 # gl = [754044548, 208248400] # [669026253,, 782270111, 1080197262, 1149277515, 913941037] # 
-gl = [g["group_id"] for g in get_bot().get_group_list()]
+
+gl: list
 
 @scheduler.scheduled_job("interval", minutes=1)
 async def _():
     bot = get_bot()
+    if not gl:
+        gl = [g["group_id"] for g in bot.get_group_list()]
     if bot:
         timestr = time.strftime("%a %b %d %H:%M %Y CST", time.localtime())
         for g in gl:
