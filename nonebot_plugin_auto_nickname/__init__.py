@@ -11,7 +11,8 @@ __plugin_author__ = "YiJiuChow"
 
 
 # lz_list = ["绿头鸡", "鸡脖哥", "鸡脖王", "鸡脖哥哥"]
-gl = [754044548, 208248400] # [669026253,, 782270111, 1080197262, 1149277515, 913941037] # 
+# gl = [754044548, 208248400] # [669026253,, 782270111, 1080197262, 1149277515, 913941037] # 
+gl = [g["group_id"] for g in get_bot().get_group_list()]
 
 @scheduler.scheduled_job("interval", minutes=1)
 async def _():
