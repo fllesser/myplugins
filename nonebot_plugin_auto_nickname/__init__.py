@@ -18,7 +18,7 @@ autoname_gl: list = []
 async def _():
     bot = get_bot()
     if len(autoname_gl) == 0:
-        gl = [g["group_id"] for g in bot.get_group_list()]
+        gl = [g["group_id"] for g in await bot.get_group_list()]
     if bot:
         timestr = time.strftime("%a %b %d %H:%M %Y CST", time.localtime())
         for g in gl:
