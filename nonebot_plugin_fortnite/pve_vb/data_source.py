@@ -38,7 +38,8 @@ async def update_daily_vb() -> str:
             # 电力
             await img.atext(text=item.b.string, pos=(70, Y - 3), fill=(255, 255, 255))
             await img.apaste(img=ele_img, pos=(100, Y + 1), alpha=True)  # 电力图标
-            await img.atext(pos=(130, Y - 3), text=item.span.text, fill=(255, 255, 255))
+            vb_num: str = item.span.text.split(",")[0]
+            await img.atext(pos=(130, Y - 3), text=vb_num, fill=(255, 255, 255))
             Y += 30
     if Y == 30:
         img.font = ImageFont.truetype(str(FONT_PATH / "HWXingKai.ttf"), 30)
